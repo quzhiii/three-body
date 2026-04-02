@@ -14,6 +14,8 @@
 > 一套为 AI Agent 设计的行为约束与任务路由体系，
 > 每一个 skill，都是宇宙中的一个角色。
 
+🌐 [English Version](./README_EN.md)
+
 </div>
 
 ---
@@ -210,7 +212,84 @@ AI Agent 在使用中面临两个根本问题：
 
 ---
 
-## 🚀 快速安装
+## 🖥️ 适配平台
+
+three-body 适用于以下 AI Agent 开发环境：
+
+| 平台 | 标识 | 安装方式 | 状态 |
+|:---:|:---:|:---|:---:|
+| **Claude Code** | `claude` | Skill 目录安装 | ✅ 已验证 |
+| **Opencode** | `opencode` | Skill 目录安装 | ✅ 已验证 |
+| **OpenClaw** | `openclaw` | Skill 目录安装 | 🔄 适配中 |
+| **Codex CLI** | `codex` | 通过配置引用 | 🔄 适配中 |
+
+### 通用安装方法
+
+所有基于 Skill 体系的 Agent 环境，安装方式基本一致：
+
+```bash
+# 1. 克隆或下载本仓库
+git clone https://github.com/quzhiii/three-body.git
+
+# 2. 复制需要的 skill 到对应平台的 skills 目录
+# 平台示例：
+#   Claude Code: ~/.claude/skills/
+#   Opencode: ~/.opencode/skills/
+#   OpenClaw: ~/.openclaw/skills/
+```
+
+### 各平台详细安装
+
+#### Claude Code
+
+```bash
+# 推荐：安装拆分版（v3.0）
+cp -r three-body/environment-governance ~/.claude/skills/
+cp -r three-body/agent-work-environment-v3 ~/.claude/skills/
+
+# 可选：档案读取器
+cp -r three-body/diagnostic-archive ~/.claude/skills/
+
+# 验证安装
+claude skills list
+```
+
+#### Opencode
+
+```bash
+# 推荐：安装拆分版（v3.0）
+cp -r three-body/environment-governance ~/.opencode/skills/
+cp -r three-body/agent-work-environment-v3 ~/.opencode/skills/
+
+# 验证安装
+opencode skills list
+```
+
+#### 其他平台（通用方式）
+
+对于支持自定义 skill 的 Agent 框架，直接将 skill 文件夹复制到对应目录即可：
+
+```bash
+# 通用安装命令（将 <platform> 替换为实际平台名）
+PLATFORM_DIR="~/.<platform>/skills"
+cp -r three-body/environment-governance $PLATFORM_DIR/
+cp -r three-body/agent-work-environment-v3 $PLATFORM_DIR/
+```
+
+### 使用方式
+
+安装后，在对话中直接使用触发词即可：
+
+| 触发场景 | 说明 |
+|---|---|
+| `"帮我分析下这个模块"` | 自动进入诛仙阵 → 观机阵（研究模式） |
+| `"实现这个功能，但要小心"` | 自动进入诛仙阵 → 破局阵（实现模式）+ 三体法则约束 |
+| `"上次那个 run 为什么失败了"` | 调用档案读取器进行失败诊断 |
+| `"部署到生产环境"` | 自动进入行令阵（运维模式）+ 强制执剑人授权流程 |
+
+---
+
+## 🚀 快速安装（Claude Code 示例）
 
 ```bash
 # 推荐：拆分版（v3.0），路由与治理分离

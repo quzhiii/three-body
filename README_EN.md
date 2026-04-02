@@ -14,6 +14,8 @@
 > A behavioral constraint and task routing system for AI Agents.
 > Every skill is a character in the universe.
 
+🌐 [中文版](./README.md)
+
 </div>
 
 ---
@@ -218,7 +220,84 @@ Routing + Governance integrated version. Out-of-the-box option when you don't wa
 
 ---
 
-## 🚀 Quick Install
+## 🖥️ Supported Platforms
+
+three-body works with the following AI Agent development environments:
+
+| Platform | Identifier | Installation | Status |
+|:---:|:---:|:---|:---:|
+| **Claude Code** | `claude` | Skill directory installation | ✅ Verified |
+| **Opencode** | `opencode` | Skill directory installation | ✅ Verified |
+| **OpenClaw** | `openclaw` | Skill directory installation | 🔄 In Progress |
+| **Codex CLI** | `codex` | Via configuration reference | 🔄 In Progress |
+
+### General Installation
+
+All Skill-based Agent environments follow similar installation procedures:
+
+```bash
+# 1. Clone or download this repository
+git clone https://github.com/quzhiii/three-body.git
+
+# 2. Copy required skills to the corresponding platform's skills directory
+# Platform examples:
+#   Claude Code: ~/.claude/skills/
+#   Opencode: ~/.opencode/skills/
+#   OpenClaw: ~/.openclaw/skills/
+```
+
+### Platform-Specific Installation
+
+#### Claude Code
+
+```bash
+# Recommended: Install split version (v3.0)
+cp -r three-body/environment-governance ~/.claude/skills/
+cp -r three-body/agent-work-environment-v3 ~/.claude/skills/
+
+# Optional: Archive Reader
+cp -r three-body/diagnostic-archive ~/.claude/skills/
+
+# Verify installation
+claude skills list
+```
+
+#### Opencode
+
+```bash
+# Recommended: Install split version (v3.0)
+cp -r three-body/environment-governance ~/.opencode/skills/
+cp -r three-body/agent-work-environment-v3 ~/.opencode/skills/
+
+# Verify installation
+opencode skills list
+```
+
+#### Other Platforms (Generic)
+
+For Agent frameworks that support custom skills, simply copy the skill folders to the corresponding directory:
+
+```bash
+# Generic installation command (replace <platform> with actual platform name)
+PLATFORM_DIR="~/.<platform>/skills"
+cp -r three-body/environment-governance $PLATFORM_DIR/
+cp -r three-body/agent-work-environment-v3 $PLATFORM_DIR/
+```
+
+### Usage
+
+Once installed, use trigger phrases in conversation:
+
+| Trigger Scenario | Description |
+|---|---|
+| `"Help me analyze this module"` | Auto enters Zhu Xian Formation → Guan Ji Formation (Research Mode) |
+| `"Implement this feature, but carefully"` | Auto enters Zhu Xian Formation → Po Ju Formation (Implementation Mode) + Three-Body Laws constraints |
+| `"Why did that run fail last time?"` | Invokes Archive Reader for failure diagnosis |
+| `"Deploy to production"` | Auto enters Xing Ling Formation (Ops Mode) + Mandatory Swordbearer authorization |
+
+---
+
+## 🚀 Quick Install (Claude Code Example)
 
 ```bash
 # Recommended: Split version (v3.0), routing and governance separated
@@ -311,7 +390,5 @@ MIT License — Free to use, contributions welcome.
 **Three-Body defines the boundary. Zhu Xian Formation decides the approach.**
 
 [Universe Map](./UNIVERSE.md) · [Three-Body Laws](./environment-governance/README.md) · [Zhu Xian Formation](./agent-work-environment-v3/README.md)
-
-🌐 [中文版](./README.md)
 
 </div>
