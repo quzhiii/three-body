@@ -228,23 +228,8 @@ three-body works with the following AI Agent development environments:
 |:---:|:---:|:---|:---:|
 | **Claude Code** | `claude` | Skill directory installation | ✅ Verified |
 | **Opencode** | `opencode` | Skill directory installation | ✅ Verified |
-| **OpenClaw** | `openclaw` | Skill directory installation | 🔄 In Progress |
-| **Codex CLI** | `codex` | Via configuration reference | 🔄 In Progress |
-
-### General Installation
-
-All Skill-based Agent environments follow similar installation procedures:
-
-```bash
-# 1. Clone or download this repository
-git clone https://github.com/quzhiii/three-body.git
-
-# 2. Copy required skills to the corresponding platform's skills directory
-# Platform examples:
-#   Claude Code: ~/.claude/skills/
-#   Opencode: ~/.opencode/skills/
-#   OpenClaw: ~/.openclaw/skills/
-```
+| **OpenClaw** | `openclaw` | Skill directory installation | ✅ Verified |
+| **Codex CLI** | `codex` | Configuration / MCP | ✅ Verified |
 
 ### Platform-Specific Installation
 
@@ -273,16 +258,80 @@ cp -r three-body/agent-work-environment-v3 ~/.opencode/skills/
 opencode skills list
 ```
 
-#### Other Platforms (Generic)
+#### OpenClaw
 
-For Agent frameworks that support custom skills, simply copy the skill folders to the corresponding directory:
+OpenClaw supports loading custom skills via the Skill directory:
 
 ```bash
-# Generic installation command (replace <platform> with actual platform name)
-PLATFORM_DIR="~/.<platform>/skills"
-cp -r three-body/environment-governance $PLATFORM_DIR/
-cp -r three-body/agent-work-environment-v3 $PLATFORM_DIR/
+# Create OpenClaw skills directory (if not exists)
+mkdir -p ~/.openclaw/skills
+
+# Install three-body skills
+cp -r three-body/environment-governance ~/.openclaw/skills/
+cp -r three-body/agent-work-environment-v3 ~/.openclaw/skills/
+cp -r three-body/diagnostic-archive ~/.openclaw/skills/
+
+# Enable in OpenClaw config (usually ~/.openclaw/config.yaml)
+# skills:
+#   - environment-governance
+#   - agent-work-environment-v3
+#   - diagnostic-archive
 ```
+
+#### Codex CLI
+
+Codex CLI can incorporate three-body via **System Prompt** or **MCP (Model Context Protocol)**:
+
+**Method 1: System Prompt (Recommended)**
+
+Create or edit the Codex configuration file:
+
+```bash
+# macOS/Linux
+mkdir -p ~/.codex
+cat > ~/.codex/config.toml << 'EOF'
+[system]
+prompt = """
+You are an AI Agent with three-body governance.
+
+Always follow these principles from the Three-Body Laws:
+1. Context Budget - Conserve context window, load on demand
+2. Tool Boundary - Prefer low-risk tools, confirm high-risk ones
+3. Risk Escalation - Pause before destructive operations
+4. Writeback Policy - Confirm based on change type
+5. Diagnostic Access - Read raw evidence when debugging
+
+For task routing, use the Zhu Xian Formation approach:
+- Research tasks → Guan Ji Formation (observation mode)
+- Implementation → Po Ju Formation (breakthrough mode)
+- Verification → Ming Jian Formation (inspection mode)
+- Writing → Li Yan Formation (documentation mode)
+- Operations → Xing Ling Formation (command mode with extra caution)
+"""
+EOF
+```
+
+**Method 2: MCP (if supported)**
+
+Add to Codex's MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "three-body-governance": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "env": {
+        "SKILLS_PATH": "~/three-body"
+      }
+    }
+  }
+}
+```
+
+**Method 3: Direct SKILL.md Content**
+
+Copy the contents of `environment-governance/SKILL.md` and `agent-work-environment-v3/SKILL.md` into Codex's system prompt.
 
 ### Usage
 

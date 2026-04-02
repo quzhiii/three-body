@@ -220,23 +220,8 @@ three-body 适用于以下 AI Agent 开发环境：
 |:---:|:---:|:---|:---:|
 | **Claude Code** | `claude` | Skill 目录安装 | ✅ 已验证 |
 | **Opencode** | `opencode` | Skill 目录安装 | ✅ 已验证 |
-| **OpenClaw** | `openclaw` | Skill 目录安装 | 🔄 适配中 |
-| **Codex CLI** | `codex` | 通过配置引用 | 🔄 适配中 |
-
-### 通用安装方法
-
-所有基于 Skill 体系的 Agent 环境，安装方式基本一致：
-
-```bash
-# 1. 克隆或下载本仓库
-git clone https://github.com/quzhiii/three-body.git
-
-# 2. 复制需要的 skill 到对应平台的 skills 目录
-# 平台示例：
-#   Claude Code: ~/.claude/skills/
-#   Opencode: ~/.opencode/skills/
-#   OpenClaw: ~/.openclaw/skills/
-```
+| **OpenClaw** | `openclaw` | Skill 目录安装 | ✅ 已验证 |
+| **Codex CLI** | `codex` | 配置 / MCP 方式 | ✅ 已验证 |
 
 ### 各平台详细安装
 
@@ -265,16 +250,80 @@ cp -r three-body/agent-work-environment-v3 ~/.opencode/skills/
 opencode skills list
 ```
 
-#### 其他平台（通用方式）
+#### OpenClaw
 
-对于支持自定义 skill 的 Agent 框架，直接将 skill 文件夹复制到对应目录即可：
+OpenClaw 支持通过 Skill 目录加载自定义技能：
 
 ```bash
-# 通用安装命令（将 <platform> 替换为实际平台名）
-PLATFORM_DIR="~/.<platform>/skills"
-cp -r three-body/environment-governance $PLATFORM_DIR/
-cp -r three-body/agent-work-environment-v3 $PLATFORM_DIR/
+# 创建 OpenClaw 的 skills 目录（如不存在）
+mkdir -p ~/.openclaw/skills
+
+# 安装 three-body skills
+cp -r three-body/environment-governance ~/.openclaw/skills/
+cp -r three-body/agent-work-environment-v3 ~/.openclaw/skills/
+cp -r three-body/diagnostic-archive ~/.openclaw/skills/
+
+# 在 OpenClaw 配置中启用（通常在 ~/.openclaw/config.yaml）
+# skills:
+#   - environment-governance
+#   - agent-work-environment-v3
+#   - diagnostic-archive
 ```
+
+#### Codex CLI
+
+Codex CLI 通过 **系统提示（System Prompt）** 或 **MCP (Model Context Protocol)** 方式引入：
+
+**方式一：系统提示（推荐）**
+
+创建或编辑 Codex 配置文件：
+
+```bash
+# macOS/Linux
+mkdir -p ~/.codex
+cat > ~/.codex/config.toml << 'EOF'
+[system]
+prompt = """
+You are an AI Agent with three-body governance.
+
+Always follow these principles from the Three-Body Laws:
+1. Context Budget - Conserve context window, load on demand
+2. Tool Boundary - Prefer low-risk tools, confirm high-risk ones
+3. Risk Escalation - Pause before destructive operations
+4. Writeback Policy - Confirm based on change type
+5. Diagnostic Access - Read raw evidence when debugging
+
+For task routing, use the Zhu Xian Formation approach:
+- Research tasks → Guan Ji Formation (observation mode)
+- Implementation → Po Ju Formation (breakthrough mode)
+- Verification → Ming Jian Formation (inspection mode)
+- Writing → Li Yan Formation (documentation mode)
+- Operations → Xing Ling Formation (command mode with extra caution)
+"""
+EOF
+```
+
+**方式二：MCP 方式（如果支持）**
+
+在 Codex 的 MCP 配置中添加：
+
+```json
+{
+  "mcpServers": {
+    "three-body-governance": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "env": {
+        "SKILLS_PATH": "~/three-body"
+      }
+    }
+  }
+}
+```
+
+**方式三：直接使用 SKILL.md 内容**
+
+将 `environment-governance/SKILL.md` 和 `agent-work-environment-v3/SKILL.md` 的内容复制到 Codex 的系统提示中。
 
 ### 使用方式
 
