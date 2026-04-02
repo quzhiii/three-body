@@ -1,8 +1,10 @@
-# Integrations
+﻿# Integrations
 
 `agent-work-environment-v3` 的职责是把任务交给正确的下游 skill。
 
-行为约束不在这里定义；如果需要边界判断，先交给 `environment-governance`。
+行为约束不在这里定义；如果需要边界判断，先交给 environment-governance。
+
+默认下游映射以 eferences/downstream-skills.md 为准；本文件只描述组合路径，不重复定义权威表。
 
 ## 与 environment-governance 的关系
 
@@ -30,10 +32,11 @@
 
 - `agent-work-environment-v3` 选观机阵
 - 下游交给研究/分析类 skill
-- 整理成果时交给 `doc-coauthoring`
+- 整理成果时交给 `doc`
 
 ## 不该做的事
 
 - 不要在 v3 里重复定义三体法则
 - 不要把 `environment-governance` 当成可选附件
 - 不要让路由器替下游 skill 完成实际执行
+

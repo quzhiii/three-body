@@ -6,7 +6,7 @@
 
 [![Version](https://img.shields.io/badge/版本-v1.0-blue?style=flat-square)](./CHANGELOG.md)
 [![Platform](https://img.shields.io/badge/平台-Claude%20Code-blueviolet?style=flat-square)](https://claude.ai)
-[![License](https://img.shields.io/badge/许可-MIT-green?style=flat-square)](../../LICENSE)
+[![License](https://img.shields.io/badge/许可-MIT-green?style=flat-square)](../LICENSE)
 [![Status](https://img.shields.io/badge/状态-主推-brightgreen?style=flat-square)]()
 
 > **三体定其界：不负责"做什么"，只负责"怎么做更安全"。**

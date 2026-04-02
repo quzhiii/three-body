@@ -1,4 +1,4 @@
-# 🌌 three-body
+﻿# 🌌 three-body
 
 <div align="center">
 
@@ -342,7 +342,7 @@ Once installed, use trigger phrases in conversation:
 | `"Help me analyze this module"` | Auto enters Zhu Xian Formation → Guan Ji Formation (Research Mode) |
 | `"Implement this feature, but carefully"` | Auto enters Zhu Xian Formation → Po Ju Formation (Implementation Mode) + Three-Body Laws constraints |
 | `"Why did that run fail last time?"` | Invokes Archive Reader for failure diagnosis |
-| `"Deploy to production"` | Auto enters Xing Ling Formation (Ops Mode) + Mandatory Swordbearer authorization |
+| `"Deploy to production"` | Auto enters Xing Ling Formation (Ops Mode) + `environment-governance` high-risk confirmation flow |
 
 ---
 
@@ -359,6 +359,47 @@ cp -r diagnostic-archive ~/.claude/skills/
 # Or: Combined version (v2.1), out-of-the-box
 cp -r agent-work-environment ~/.claude/skills/
 ```
+
+---
+
+## 🧪 Repo Validation
+
+Before packaging or publishing, run the local validator:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\validate-repo.ps1
+```
+
+It checks:
+
+- Whether the root `LICENSE` file exists
+- Whether each skill package includes both `SKILL.md` and `README.md`
+- Whether each skill package has a matching `.skill` packaged artifact
+- Whether local relative Markdown links resolve correctly
+
+---
+
+## 📦 Build `.skill` Artifacts
+
+The `.skill` files in the repo root are generated release artifacts from the source directories.
+
+Rebuild all artifacts:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1
+```
+
+Rebuild a specific skill:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1 -SkillNames agent-work-environment-v3
+```
+
+Recommended flow:
+
+1. Edit the source directories first
+2. Run the packaging script to refresh `.skill`
+3. Run the validator to confirm release-facing files are still aligned
 
 ---
 
@@ -441,3 +482,6 @@ MIT License — Free to use, contributions welcome.
 [Universe Map](./UNIVERSE.md) · [Three-Body Laws](./environment-governance/README.md) · [Zhu Xian Formation](./agent-work-environment-v3/README.md)
 
 </div>
+
+
+

@@ -1,4 +1,4 @@
-# 🌌 three-body
+﻿# 🌌 three-body
 
 <div align="center">
 
@@ -334,7 +334,7 @@ EOF
 | `"帮我分析下这个模块"` | 自动进入诛仙阵 → 观机阵（研究模式） |
 | `"实现这个功能，但要小心"` | 自动进入诛仙阵 → 破局阵（实现模式）+ 三体法则约束 |
 | `"上次那个 run 为什么失败了"` | 调用档案读取器进行失败诊断 |
-| `"部署到生产环境"` | 自动进入行令阵（运维模式）+ 强制执剑人授权流程 |
+| `"部署到生产环境"` | 自动进入行令阵（运维模式）+ `environment-governance` 高风险确认流程 |
 
 ---
 
@@ -351,6 +351,47 @@ cp -r diagnostic-archive ~/.claude/skills/
 # 或者：组合版（v2.1），开箱即用
 cp -r agent-work-environment ~/.claude/skills/
 ```
+
+---
+
+## 🧪 仓库自检
+
+在发布或打包前，建议先跑一遍本地校验：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\validate-repo.ps1
+```
+
+它会检查：
+
+- 根目录 `LICENSE` 是否存在
+- 每个 skill 包是否同时包含 `SKILL.md` 和 `README.md`
+- 每个 skill 包是否存在对应的 `.skill` 打包产物
+- 仓库内 Markdown 的本地相对链接是否可解析
+
+---
+
+## 📦 生成 `.skill` 产物
+
+根目录的 `.skill` 文件是由源码目录生成的发布产物。
+
+重新生成全部产物：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1
+```
+
+只生成指定 skill：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1 -SkillNames agent-work-environment-v3
+```
+
+建议流程：
+
+1. 先改源码目录
+2. 运行打包脚本更新 `.skill`
+3. 再运行校验脚本确认发布面没有漂移
 
 ---
 
@@ -435,3 +476,6 @@ MIT License — 自由使用，欢迎贡献。
 🌐 [English Version](./README_EN.md)
 
 </div>
+
+
+

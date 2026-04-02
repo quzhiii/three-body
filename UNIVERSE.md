@@ -86,7 +86,7 @@ THREE-BODY UNIVERSE
   · 执剑人威慑：拥有毁灭权限的人选择不开火
   
   这一哲学贯穿 three-body 的所有 skill，
-  是 behavior-governance 的底层精神内核。
+  是 environment-governance 的底层精神内核。
 ═══════════════════════════════════════════════════════════
 ```
 

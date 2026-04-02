@@ -1,4 +1,4 @@
----
+﻿---
 name: agent-work-environment-v3
 description: >
   Use when a task is multi-stage (spans research, coding, verification, writing, or ops),
@@ -89,16 +89,17 @@ description: >
 
 ## Downstream Skill Handoff
 
+默认推荐与回退规则以 `references/downstream-skills.md` 为准；下表只是摘要。
+
 | 阵型 | 优先推荐 | 可替代类型 |
 |---|---|---|
 | 观机阵（研究模式） | `brainstorming`, `review` | 研究、调研、分析类 skill |
 | 破局阵（实现模式） | `Code`, `test-runner` | 编码、测试、修复类 skill |
 | 明鉴阵（验证模式） | `review`, `qa` | 验证、审查、测试类 skill |
-| 立言阵（写作模式） | `doc-coauthoring` | 文档、方案、总结类 skill |
+| 立言阵（写作模式） | `doc` | 文档、方案、总结类 skill |
 | 行令阵（运维模式） | `careful`, `guard` | 环境、部署、命令治理类 skill |
 
 ## Formation Switch Rules
-
 - 研究 -> 实现：从理解问题转为动手修改
 - 实现 -> 验证：改动完成后进入检查
 - 验证 -> 实现：发现问题后开始修复
@@ -124,3 +125,4 @@ description: >
 |---|---|
 | `references/formations.md` | 需要查看阵型定义、完成标准、检查清单和交付格式时 |
 | `references/formation-law-mapping.md` | 需要查看阵型到任务信号的映射（供 environment-governance 使用）时 |
+| `references/downstream-skills.md` | 需要查看阵型对应的默认下游 skill 与回退规则时 |
