@@ -20,6 +20,22 @@
 
 ---
 
+## ⚡ 一条命令安装（Mac / Linux）
+
+```bash
+./install.sh claude --with-archive
+```
+
+支持目标：
+
+- `claude`
+- `opencode`
+- `openclaw`
+
+更多选项见 [install.sh](./install.sh)。
+
+---
+
 ## 💡 为什么叫 three-body
 
 我是刘慈欣《三体》的忠实读者。
@@ -202,6 +218,22 @@ AI Agent 在使用中面临两个根本问题：
 **`diagnostic-archive`** · v1.0 · [查看详情](./diagnostic-archive/README.md)
 
 失败诊断与历史对比。读取 run 档案，定位根因，支持单次诊断和双次对比。
+
+档案格式和生成方式见 [RUN-ARCHIVES.md](./diagnostic-archive/RUN-ARCHIVES.md)。
+
+---
+
+## 🔬 装了和没装的差别
+
+如果你担心这类 skill 只是“自然语言约束”，先看这个最小对比示例：
+
+- [examples/behavior-diff.md](./examples/behavior-diff.md)
+
+它展示同一个高风险 prompt 在三种情况下的差异：
+
+- 没装 three-body
+- 只装 `environment-governance`
+- 同时装路由层和治理层
 
 ---
 

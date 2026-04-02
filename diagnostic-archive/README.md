@@ -57,6 +57,9 @@
 artifacts/runs/
 ```
 
+`diagnostic-archive` 自己**不生成档案**，它只读取你现有执行系统已经写出的 run 档案。
+如果你还没有这套目录结构，先看 [RUN-ARCHIVES.md](./RUN-ARCHIVES.md)。
+
 ---
 
 ## 📦 输出内容
@@ -87,6 +90,13 @@ artifacts/runs/
 cp -r diagnostic-archive ~/.claude/skills/
 ```
 
+### 先确认你有档案可读
+
+如果你的系统还没有产出 `artifacts/runs/`，先看：
+
+- [RUN-ARCHIVES.md](./RUN-ARCHIVES.md) — run 档案是什么、谁来生成、如何起步
+- [references/archive-schema.md](./references/archive-schema.md) — 每个文件的用途
+
 ### 典型使用场景
 
 ```text
@@ -112,6 +122,7 @@ cp -r diagnostic-archive ~/.claude/skills/
 diagnostic-archive/
 ├── SKILL.md
 ├── README.md
+├── RUN-ARCHIVES.md
 └── references/
     ├── archive-schema.md
     ├── read-workflow.md

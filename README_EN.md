@@ -20,6 +20,22 @@
 
 ---
 
+## ⚡ One-Line Install (Mac / Linux)
+
+```bash
+./install.sh claude --with-archive
+```
+
+Supported targets:
+
+- `claude`
+- `opencode`
+- `openclaw`
+
+See [install.sh](./install.sh) for options.
+
+---
+
 ## 💡 Why "three-body"
 
 I am an avid reader of Liu Cixin's *The Three-Body Problem*.
@@ -210,6 +226,22 @@ Five Formations:
 **`diagnostic-archive`** · v1.0 · [Details](./diagnostic-archive/README.md)
 
 Failure diagnosis and historical comparison. Read run archives, locate root causes, support single-run diagnosis and dual-run comparison.
+
+Archive format and generation notes: [RUN-ARCHIVES.md](./diagnostic-archive/RUN-ARCHIVES.md)
+
+---
+
+## 🔬 What Changes After Installation
+
+If you are skeptical that these skills are “just natural-language rules,” start with the smallest proof:
+
+- [examples/behavior-diff.md](./examples/behavior-diff.md)
+
+It compares the same high-risk prompt in three states:
+
+- no three-body installed
+- only `environment-governance`
+- routing + governance installed together
 
 ---
 
