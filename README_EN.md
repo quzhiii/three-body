@@ -18,6 +18,10 @@
   <a href="#best-fit-scenarios">Best fit</a>
 </p>
 
+<p align="center">
+  <img src="./docs/assets/hero.png" alt="three-body" style="max-height: 360px; width: auto;">
+</p>
+
 > **Three-Body defines the boundary. Zhu Xian Formation decides the approach.**
 >
 > A governance system for AI agents:

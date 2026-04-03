@@ -18,6 +18,10 @@
   <a href="#适配场景">适配场景</a>
 </p>
 
+<p align="center">
+  <img src="./docs/assets/hero.png" alt="three-body" style="max-height: 360px; width: auto;">
+</p>
+
 > **三体定其界，诛仙阵定其式。**
 >
 > 一套给 AI Agent 使用的**行为治理系统**：
