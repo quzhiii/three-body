@@ -16,6 +16,8 @@
 
 🌐 [中文版](./README.md)
 
+📘 [Architecture Overview](./ARCHITECTURE.md)
+
 </div>
 
 ---
@@ -162,6 +164,10 @@ AI Agents face two fundamental problems in use:
 
 **Decoupled design**: The governance layer manages constraints, the routing layer manages modes. Independent but combinable.
 
+For the full system layering, call sequence, and technical roadmap, see:
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 ---
 
 ## 🏗️ Current Architecture (Phase 1)
@@ -228,6 +234,27 @@ Five Formations:
 Failure diagnosis and historical comparison. Read run archives, locate root causes, support single-run diagnosis and dual-run comparison.
 
 Archive format and generation notes: [RUN-ARCHIVES.md](./diagnostic-archive/RUN-ARCHIVES.md)
+
+---
+
+### ⚔️ Swordbearer
+**`swordbearer`** · v0.1 · [Details](./swordbearer/README.md)
+
+The first landed strategy-layer role in Phase 2. It performs final authorization before high-risk actions are executed: allow, pause, deny, or require more context.
+
+---
+
+### 🧱 Wallfacer
+**`wallfacer`** · v0.1 · [Details](./wallfacer/README.md)
+
+The second landed strategy-layer role in Phase 2. It performs deep planning before complex tasks move into implementation: compare candidate paths, choose a main path, mark critical unknowns, and decide the next handoff.
+
+---
+
+### 🔓 Wallbreaker
+**`wallbreaker`** · v0.1 · [Details](./wallbreaker/README.md)
+
+The third landed strategy-layer role in Phase 2. It performs adversarial scrutiny on existing plans: exposing hidden assumptions, surfacing failure modes, demanding validation, and deciding whether a plan should proceed.
 
 ---
 
@@ -385,12 +412,46 @@ Once installed, use trigger phrases in conversation:
 cp -r environment-governance ~/.claude/skills/
 cp -r agent-work-environment-v3 ~/.claude/skills/
 
+# Optional: Strategy layer (Phase 2)
+cp -r swordbearer ~/.claude/skills/
+cp -r wallfacer ~/.claude/skills/
+cp -r wallbreaker ~/.claude/skills/
+
 # Optional: Failure diagnosis
 cp -r diagnostic-archive ~/.claude/skills/
 
 # Or: Combined version (v2.1), out-of-the-box
 cp -r agent-work-environment ~/.claude/skills/
 ```
+
+If you use the repository installer, the equivalent commands are:
+
+```bash
+# Base split install
+./install.sh claude
+
+# Base split + archive reader
+./install.sh claude --with-archive
+
+# Base split + strategy layer (all three roles)
+./install.sh claude --with-strategy
+
+# Base split + strategy layer + archive reader
+./install.sh claude --with-strategy --with-archive
+
+# Classic combined mode
+./install.sh claude --classic
+```
+
+### When the strategy layer is worth installing
+
+Install `swordbearer / wallfacer / wallbreaker` when:
+
+- you want a final authorization layer before high-risk actions
+- you often face complex multi-stage tasks that benefit from explicit planning first
+- you want plans challenged before execution, not only reviewed afterward
+
+If you want the lightest possible three-body setup, stay with the base split install.
 
 ---
 
@@ -407,6 +468,8 @@ It checks:
 - Whether the root `LICENSE` file exists
 - Whether each skill package includes both `SKILL.md` and `README.md`
 - Whether each skill package has a matching `.skill` packaged artifact
+- Whether strategy-layer skills (`swordbearer` / `wallfacer` / `wallbreaker`) also include `CHANGELOG.md` and `EXAMPLES.md`
+- Whether strategy-layer skills are synchronized into `README.md`, `README_EN.md`, and `UNIVERSE.md`
 - Whether local relative Markdown links resolve correctly
 
 ---
@@ -441,9 +504,9 @@ three-body is an ever-expanding universe. Planned characters:
 
 | Character | Candidate ID | Definition | Phase |
 |:---:|:---|:---|:---:|
-| ⚔️ **Swordbearer** | `swordbearer` | Final authorization for high-risk ops, deterrence > interception | Phase 2 |
-| 🧱 **Wallfacer** | `wallfacer` | Independent deep planning, not exposing intermediate intent | Phase 2 |
-| 🔓 **Wallbreaker** | `wallbreaker` | Questioning existing solutions, finding unverified assumptions | Phase 2 |
+| ⚔️ **Swordbearer** | `swordbearer` | Final authorization for high-risk ops, deterrence > interception | **Phase 2A (in progress)** |
+| 🧱 **Wallfacer** | `wallfacer` | Independent deep planning, not exposing intermediate intent | **Phase 2B (in progress)** |
+| 🔓 **Wallbreaker** | `wallbreaker` | Questioning existing solutions, finding unverified assumptions | **Phase 2C (in progress)** |
 | 👁️ **Sophon** | `sophon` | Cross-session memory, global pattern recognition | Phase 3 |
 
 → [Complete Universe Map](./UNIVERSE.md)
@@ -472,6 +535,7 @@ The Swordbearer's deterrence philosophy, the Wallfacer's deep planning, the Soph
 three-body/
 ├── README.md                        # Chinese version (default)
 ├── README_EN.md                     # This file (English)
+├── ARCHITECTURE.md                  # System relationships and call flows
 ├── UNIVERSE.md                      # Universe map and roadmap
 │
 ├── environment-governance/          # ⚖️ Three-Body Laws (Governance)
@@ -488,6 +552,18 @@ three-body/
 │       └── formation-law-mapping.md
 │
 ├── diagnostic-archive/              # 📁 Archive Reader
+│   ├── SKILL.md
+│   └── references/
+│
+├── swordbearer/                     # ⚔️ Swordbearer (Phase 2A)
+│   ├── SKILL.md
+│   └── references/
+│
+├── wallfacer/                       # 🧱 Wallfacer (Phase 2B)
+│   ├── SKILL.md
+│   └── references/
+│
+├── wallbreaker/                     # 🔓 Wallbreaker (Phase 2C)
 │   ├── SKILL.md
 │   └── references/
 │
@@ -511,7 +587,7 @@ MIT License — Free to use, contributions welcome.
 
 **Three-Body defines the boundary. Zhu Xian Formation decides the approach.**
 
-[Universe Map](./UNIVERSE.md) · [Three-Body Laws](./environment-governance/README.md) · [Zhu Xian Formation](./agent-work-environment-v3/README.md)
+[Architecture Overview](./ARCHITECTURE.md) · [Universe Map](./UNIVERSE.md) · [Three-Body Laws](./environment-governance/README.md) · [Zhu Xian Formation](./agent-work-environment-v3/README.md)
 
 </div>
 

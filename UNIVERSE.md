@@ -18,6 +18,10 @@ AI Agent 的治理同样如此：
 - **战术层** → 该怎么做（阵型路由）
 - **情报层** → 已知什么（记忆与诊断）
 
+系统层级、调用顺序和职责边界的正式说明见：
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 ---
 
 ## 🗺️ 宇宙地图（现有 + 规划）
@@ -107,9 +111,9 @@ THREE-BODY UNIVERSE
 
 | 宇宙名称 | 候选 Skill ID | 角色定义 | 优先级 |
 |---|---|---|---|
-| **Swordbearer** | `swordbearer` | 执剑人：高危操作最终授权，持有否决权 | 🔥 高 |
-| **Wallfacer** | `wallfacer` | 面壁人：独立深度规划，不暴露中间意图 | 🔥 高 |
-| **Wallbreaker** | `wallbreaker` | 破壁人：突破认知盲区，探索未知方案 | 🟡 中 |
+| **Swordbearer** | `swordbearer` | 执剑人：高危操作最终授权，持有否决权 | ✅ Phase 2A |
+| **Wallfacer** | `wallfacer` | 面壁人：独立深度规划，不暴露中间意图 | ✅ Phase 2B |
+| **Wallbreaker** | `wallbreaker` | 破壁人：突破认知盲区，探索未知方案 | ✅ Phase 2C |
 | **Sophon** | `sophon` | 智子：跨 session 记忆，全局模式识别 | 🟡 中 |
 
 ---
@@ -169,8 +173,9 @@ Phase 1（当前）：建立法则基础
 └── ✅ Archive Reader      (diagnostic-archive)
 
 Phase 2（近期）：引入战略角色
-├── 🔲 Swordbearer  — 执剑人授权机制
-└── 🔲 Wallfacer + Wallbreaker — 深度规划 + 质疑对
+├── ✅ Swordbearer  — 执剑人授权机制（Phase 2A 起步已落地）
+├── ✅ Wallfacer   — 面壁人深度规划（Phase 2B 起步已落地）
+└── ✅ Wallbreaker — 破壁人质疑对（Phase 2C 起步已落地）
 
 Phase 3（中期）：情报与记忆
 └── 🔲 Sophon — 跨 session 记忆与模式识别

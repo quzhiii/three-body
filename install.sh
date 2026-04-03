@@ -16,12 +16,14 @@ Targets:
 Options:
   --classic         Install agent-work-environment only
   --with-archive    Also install diagnostic-archive
+  --with-strategy   Also install swordbearer, wallfacer, wallbreaker
   --dry-run         Print actions without copying files
   -h, --help        Show this help
 
 Examples:
   ./install.sh claude
   ./install.sh claude --with-archive
+  ./install.sh claude --with-strategy
   ./install.sh opencode --classic
 EOF
 }
@@ -34,6 +36,7 @@ fi
 target=""
 mode="split"
 with_archive="false"
+with_strategy="false"
 dry_run="false"
 
 while [[ $# -gt 0 ]]; do
@@ -48,6 +51,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --with-archive)
       with_archive="true"
+      shift
+      ;;
+    --with-strategy)
+      with_strategy="true"
       shift
       ;;
     --dry-run)
@@ -93,6 +100,10 @@ fi
 
 if [[ "$with_archive" == "true" ]]; then
   skills+=("diagnostic-archive")
+fi
+
+if [[ "$with_strategy" == "true" ]]; then
+  skills+=("swordbearer" "wallfacer" "wallbreaker")
 fi
 
 echo "Target directory: $skill_home"

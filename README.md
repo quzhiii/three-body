@@ -16,6 +16,8 @@
 
 🌐 [English Version](./README_EN.md)
 
+📘 [架构总览](./ARCHITECTURE.md)
+
 </div>
 
 ---
@@ -160,6 +162,10 @@ AI Agent 在使用中面临两个根本问题：
 
 两层**解耦设计**：法则层管约束，路由层管模式。各自独立，也可组合。
 
+如果你想看完整的系统层次、调用顺序和技术路线，请直接看：
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 ---
 
 ## 🏗️ 当前架构（Phase 1）
@@ -220,6 +226,27 @@ AI Agent 在使用中面临两个根本问题：
 失败诊断与历史对比。读取 run 档案，定位根因，支持单次诊断和双次对比。
 
 档案格式和生成方式见 [RUN-ARCHIVES.md](./diagnostic-archive/RUN-ARCHIVES.md)。
+
+---
+
+### ⚔️ Swordbearer — 执剑人
+**`swordbearer`** · v0.1 · [查看详情](./swordbearer/README.md)
+
+第二阶段战略层首个落地角色。负责在高危动作真正执行前做最终授权判断：允许、暂缓、拒绝，或要求补充更多信息。
+
+---
+
+### 🧱 Wallfacer — 面壁人
+**`wallfacer`** · v0.1 · [查看详情](./wallfacer/README.md)
+
+第二阶段战略层第二个落地角色。负责在复杂任务进入实现前完成深度规划：比较候选路径、选择主方案、标记关键未知，并决定下一步 handoff。
+
+---
+
+### 🔓 Wallbreaker — 破壁人
+**`wallbreaker`** · v0.1 · [查看详情](./wallbreaker/README.md)
+
+第二阶段战略层第三个落地角色。负责对已有方案做对抗式审查：识别隐含假设、暴露失败模式、要求补充验证，并决定方案是否应继续推进。
 
 ---
 
@@ -377,12 +404,46 @@ EOF
 cp -r environment-governance ~/.claude/skills/
 cp -r agent-work-environment-v3 ~/.claude/skills/
 
+# 可选：战略层（Phase 2）
+cp -r swordbearer ~/.claude/skills/
+cp -r wallfacer ~/.claude/skills/
+cp -r wallbreaker ~/.claude/skills/
+
 # 可选：失败诊断
 cp -r diagnostic-archive ~/.claude/skills/
 
 # 或者：组合版（v2.1），开箱即用
 cp -r agent-work-environment ~/.claude/skills/
 ```
+
+如果你使用仓库自带安装脚本，可以这样安装：
+
+```bash
+# 基础 split 安装
+./install.sh claude
+
+# 基础 split + 档案读取器
+./install.sh claude --with-archive
+
+# 基础 split + 战略层（三个角色）
+./install.sh claude --with-strategy
+
+# 基础 split + 战略层 + 档案读取器
+./install.sh claude --with-strategy --with-archive
+
+# 组合版（兼容保留）
+./install.sh claude --classic
+```
+
+### 战略层什么时候值得安装
+
+建议安装 `swordbearer / wallfacer / wallbreaker` 的情况：
+
+- 你希望高危动作在执行前有最终授权层
+- 你经常面对复杂多阶段任务，需要先收敛方案再实施
+- 你希望在执行前，有一个专门的“挑战方案”角色来暴露盲点
+
+如果你只是想先用最轻量的 three-body 体验，保持 split 基础安装即可。
 
 ---
 
@@ -399,6 +460,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\validate-repo.ps1
 - 根目录 `LICENSE` 是否存在
 - 每个 skill 包是否同时包含 `SKILL.md` 和 `README.md`
 - 每个 skill 包是否存在对应的 `.skill` 打包产物
+- 战略层 skill（`swordbearer` / `wallfacer` / `wallbreaker`）是否同时包含 `CHANGELOG.md` 和 `EXAMPLES.md`
+- 战略层 skill 是否已同步接入 `README.md` / `README_EN.md` / `UNIVERSE.md`
 - 仓库内 Markdown 的本地相对链接是否可解析
 
 ---
@@ -433,9 +496,9 @@ three-body 是一个持续扩张的宇宙。已规划的角色：
 
 | 角色 | 候选 ID | 定义 | 阶段 |
 |:---:|---|---|:---:|
-| ⚔️ **执剑人** | `swordbearer` | 高危操作最终授权者，威慑 > 拦截 | Phase 2 |
-| 🧱 **面壁人** | `wallfacer` | 独立深度规划，不暴露中间意图 | Phase 2 |
-| 🔓 **破壁人** | `wallbreaker` | 质疑现有方案，寻找未验证假设 | Phase 2 |
+| ⚔️ **执剑人** | `swordbearer` | 高危操作最终授权者，威慑 > 拦截 | **Phase 2A（进行中）** |
+| 🧱 **面壁人** | `wallfacer` | 独立深度规划，不暴露中间意图 | **Phase 2B（进行中）** |
+| 🔓 **破壁人** | `wallbreaker` | 质疑现有方案，寻找未验证假设 | **Phase 2C（进行中）** |
 | 👁️ **智子** | `sophon` | 跨 session 记忆，全局模式识别 | Phase 3 |
 
 → [完整宇宙地图](./UNIVERSE.md)
@@ -464,6 +527,7 @@ three-body 是一个持续扩张的宇宙。已规划的角色：
 three-body/
 ├── README.md                        # 本文件（中文版）
 ├── README_EN.md                     # 英文版
+├── ARCHITECTURE.md                  # 系统关系说明书
 ├── UNIVERSE.md                      # 宇宙全图与规划
 │
 ├── environment-governance/          # ⚖️ 三体法则（治理层）
@@ -480,6 +544,18 @@ three-body/
 │       └── formation-law-mapping.md
 │
 ├── diagnostic-archive/              # 🔍 黑暗森林档案
+│   ├── SKILL.md
+│   └── references/
+│
+├── swordbearer/                     # ⚔️ 执剑人（Phase 2A）
+│   ├── SKILL.md
+│   └── references/
+│
+├── wallfacer/                       # 🧱 面壁人（Phase 2B）
+│   ├── SKILL.md
+│   └── references/
+│
+├── wallbreaker/                     # 🔓 破壁人（Phase 2C）
 │   ├── SKILL.md
 │   └── references/
 │
@@ -503,7 +579,7 @@ MIT License — 自由使用，欢迎贡献。
 
 **三体定其界（怎么做），诛仙阵定其式（做什么）。**
 
-[宇宙地图](./UNIVERSE.md) · [三体法则](./environment-governance/README.md) · [诛仙阵](./agent-work-environment-v3/README.md)
+[架构总览](./ARCHITECTURE.md) · [宇宙地图](./UNIVERSE.md) · [三体法则](./environment-governance/README.md) · [诛仙阵](./agent-work-environment-v3/README.md)
 
 🌐 [English Version](./README_EN.md)
 

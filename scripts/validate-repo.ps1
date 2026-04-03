@@ -38,6 +38,11 @@ $skillDirs = Get-ChildItem -LiteralPath $repoRoot -Directory |
         (Test-Path -LiteralPath (Join-Path $_.FullName "SKILL.md"))
     }
 
+$strategySkills = @("swordbearer", "wallfacer", "wallbreaker")
+$rootReadme = Join-Path $repoRoot "README.md"
+$rootReadmeEn = Join-Path $repoRoot "README_EN.md"
+$universeDoc = Join-Path $repoRoot "UNIVERSE.md"
+
 foreach ($dir in $skillDirs) {
     $skillFile = Join-Path $dir.FullName "SKILL.md"
     $readmeFile = Join-Path $dir.FullName "README.md"
@@ -53,6 +58,33 @@ foreach ($dir in $skillDirs) {
     $artifactFile = Join-Path $repoRoot ("{0}.skill" -f $dir.Name)
     if (-not (Test-Path -LiteralPath $artifactFile)) {
         Add-ErrorMessage "Skill package '$($dir.Name)' is missing packaged artifact '$($dir.Name).skill'."
+    }
+
+    if ($strategySkills -contains $dir.Name) {
+        $changelogFile = Join-Path $dir.FullName "CHANGELOG.md"
+        $examplesFile = Join-Path $dir.FullName "EXAMPLES.md"
+
+        if (-not (Test-Path -LiteralPath $changelogFile)) {
+            Add-ErrorMessage "Strategy skill '$($dir.Name)' is missing CHANGELOG.md."
+        }
+
+        if (-not (Test-Path -LiteralPath $examplesFile)) {
+            Add-ErrorMessage "Strategy skill '$($dir.Name)' is missing EXAMPLES.md."
+        }
+    }
+}
+
+foreach ($strategySkill in $strategySkills) {
+    if (-not (Test-Path -LiteralPath $rootReadme) -or -not (Select-String -LiteralPath $rootReadme -Pattern $strategySkill -Quiet)) {
+        Add-ErrorMessage "Root README.md is missing strategy skill reference '$strategySkill'."
+    }
+
+    if (-not (Test-Path -LiteralPath $rootReadmeEn) -or -not (Select-String -LiteralPath $rootReadmeEn -Pattern $strategySkill -Quiet)) {
+        Add-ErrorMessage "Root README_EN.md is missing strategy skill reference '$strategySkill'."
+    }
+
+    if (-not (Test-Path -LiteralPath $universeDoc) -or -not (Select-String -LiteralPath $universeDoc -Pattern $strategySkill -Quiet)) {
+        Add-ErrorMessage "UNIVERSE.md is missing strategy skill reference '$strategySkill'."
     }
 }
 
