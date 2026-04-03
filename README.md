@@ -10,6 +10,14 @@
 [![Skills](https://img.shields.io/badge/已发布-7%20skills-brightgreen?style=flat-square)](./ARCHITECTURE.md)
 [![Architecture](https://img.shields.io/badge/架构-四层体系-orange?style=flat-square)](./ARCHITECTURE.md)
 
+<p align="center">
+  <a href="#为什么这个仓库值得看">为什么值得看</a> ·
+  <a href="#当前架构phase-2">当前架构</a> ·
+  <a href="#7-个-skills-各自干什么">Skills 关系</a> ·
+  <a href="#什么时候该装哪些-skill">安装</a> ·
+  <a href="#适配场景">适配场景</a>
+</p>
+
 > **三体定其界，诛仙阵定其式。**
 >
 > 一套给 AI Agent 使用的**行为治理系统**：
@@ -120,15 +128,6 @@ three-body 由四层组成，可以拆开装，也可以串起来用：
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-这也是这次 README 重点修复的地方：
-
-- ✅ 顶部 Phase 已更新为 **Phase 2**
-- ✅ 顶部 skills 数量已更新为 **7 skills**
-- ✅ 架构图已从旧的三层视图更新为**四层体系**
-- ✅ README 本身已解释 skills 关系，不再只靠 `ARCHITECTURE.md`
-
----
-
 ## 7 个 skills 各自干什么
 
 ### 主架构中的 6 个角色
@@ -217,7 +216,7 @@ README 真正需要讲清楚的，是这几个 skill 在什么顺序下协作。
 
 ---
 
-## 三体 × 诛仙阵：为什么这个命名不是装饰
+## 三体 × 诛仙阵：命名的由来
 
 ### 三体定其界
 

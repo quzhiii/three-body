@@ -10,6 +10,14 @@
 [![Skills](https://img.shields.io/badge/Released-7%20skills-brightgreen?style=flat-square)](./ARCHITECTURE.md)
 [![Architecture](https://img.shields.io/badge/Architecture-4%20layers-orange?style=flat-square)](./ARCHITECTURE.md)
 
+<p align="center">
+  <a href="#why-this-repository-exists">Why</a> ·
+  <a href="#current-architecture-phase-2">Architecture</a> ·
+  <a href="#what-each-of-the-7-skills-does">Skills</a> ·
+  <a href="#what-to-install-and-when">Install</a> ·
+  <a href="#best-fit-scenarios">Best fit</a>
+</p>
+
 > **Three-Body defines the boundary. Zhu Xian Formation decides the approach.**
 >
 > A governance system for AI agents:
@@ -123,15 +131,6 @@ The shortest way to think about it is this: it restructures the agent behavior c
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-This README specifically fixes the old repo-front mismatch:
-
-- ✅ badges now show **Phase 2**
-- ✅ released count now shows **7 skills**
-- ✅ architecture diagram now reflects the **4-layer system**
-- ✅ the README itself explains skill relationships instead of outsourcing all context to `ARCHITECTURE.md`
-
----
-
 ## What each of the 7 skills does
 
 ### The 6 roles in the main architecture
@@ -220,7 +219,7 @@ Use for: risky work that already has failure history.
 
 ---
 
-## Why the naming matters
+## Where the naming comes from
 
 ### Three-Body defines the boundary
 
