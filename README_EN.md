@@ -5,581 +5,524 @@
 **AI Agent Governance Universe · Inspired by *The Three-Body Problem***
 
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](./LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Claude%20Code-blueviolet?style=flat-square)](https://claude.ai)
-[![Phase](https://img.shields.io/badge/Phase-1%20·%20Foundation-blue?style=flat-square)](./UNIVERSE.md)
-[![Skills](https://img.shields.io/badge/Released-3%20skills-brightgreen?style=flat-square)]()
+[![Platform](https://img.shields.io/badge/Platform-Claude%20Code%20%2F%20Opencode%20%2F%20OpenClaw-blueviolet?style=flat-square)](./install.sh)
+[![Phase](https://img.shields.io/badge/Phase-2%20·%20Strategy%20Layer%20Live-blue?style=flat-square)](./UNIVERSE.md)
+[![Skills](https://img.shields.io/badge/Released-7%20skills-brightgreen?style=flat-square)](./ARCHITECTURE.md)
+[![Architecture](https://img.shields.io/badge/Architecture-4%20layers-orange?style=flat-square)](./ARCHITECTURE.md)
 
 > **Three-Body defines the boundary. Zhu Xian Formation decides the approach.**
 >
-> A behavioral constraint and task routing system for AI Agents.
-> Every skill is a character in the universe.
+> A governance system for AI agents:
+> not just **what to do**, but **when to pause, when to plan, when to inspect evidence, and when not to proceed at all**.
 
-🌐 [中文版](./README.md)
-
-📘 [Architecture Overview](./ARCHITECTURE.md)
+[中文版](./README.md) · [Architecture](./ARCHITECTURE.md) · [Universe Map](./UNIVERSE.md) · [Installer](./install.sh)
 
 </div>
 
 ---
 
-## ⚡ One-Line Install (Mac / Linux)
+## Why this repository exists
+
+Most agent skills solve only one narrow problem:
+
+- how to write code
+- how to call tools
+- how to sound smart in a system prompt
+
+In practice, agent failures usually start earlier in the chain:
+
+1. the agent never chose the right working mode
+2. the safety boundary was never made explicit
+3. complex work went straight into execution without planning
+4. the plan looked reasonable because nobody tried to break it
+5. high-risk actions had no final decision maker
+6. failures were retried from intuition instead of evidence
+
+**three-body** is built around that full chain.
+
+It has four layers that can be installed separately or used together:
+
+- **Tactics**: decide how the task should be approached right now
+- **Governance**: define the current behavioral boundary
+- **Strategy**: insert planning / challenge / authorization roles when needed
+- **Evidence**: go back to archives when something fails, instead of guessing forward
+
+---
+
+## Problems it solves
+
+| Real problem | Typical failure mode | three-body's answer |
+|---|---|---|
+| The agent starts doing immediately | It codes when it should first inspect or reason | `agent-work-environment-v3` selects the working formation |
+| Safety boundary is unclear | It proceeds when it should pause or confirm | `environment-governance` defines the boundary |
+| Complex work is improvised mid-flight | Plans drift and rework gets expensive | `wallfacer` plans first |
+| Plans are never challenged | Hidden assumptions explode during implementation | `wallbreaker` attacks the plan |
+| High-risk actions lack a final decider | Risk is known, but no one authorizes or blocks | `swordbearer` makes the final call |
+| Failures are retried from guesswork | No archive reading, no evidence, repeated mistakes | `diagnostic-archive` restores the evidence trail |
+
+In one sentence:
+
+> **three-body cares less about “starting faster” and more about getting the direction and the boundary right first.**
+
+---
+
+## 30-second understanding
+
+If you only want the core idea, keep these four lines:
+
+- **Zhu Xian Formation** decides the working mode first
+- **Three-Body Laws** define the current boundary second
+- **The three strategy roles** appear only when work is complex or risky
+- **Archive Reader** pulls the system back to evidence after failure
+
+The shortest way to think about it is this: it restructures the agent behavior chain into:
+
+> **mode selection → boundary definition → strategic intervention → evidence recovery**
+
+---
+
+## Current architecture (Phase 2)
+
+```text
+┌────────────────────────────────────────────────────────────────────┐
+│                         TACTICS LAYER                              │
+│                                                                    │
+│   ⚔️ agent-work-environment-v3                                     │
+│   Zhu Xian Formation: choose research / implement / verify /       │
+│   writing / ops mode from task intent                              │
+└────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                       GOVERNANCE LAYER                             │
+│                                                                    │
+│   ⚖️ environment-governance                                        │
+│   Three-Body Laws: define confirmation, escalation, writeback,     │
+│   and diagnostic boundaries from task signals                      │
+│                                                                    │
+│   Core philosophy: Dark Forest law                                 │
+│   Here it is a law and philosophy, not a concrete execution role    │
+└────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                         STRATEGY LAYER                             │
+│                                                                    │
+│   🧱 wallfacer   → deep planning                                    │
+│   🔓 wallbreaker → adversarial challenge                            │
+│   ⚔️ swordbearer → final authorization for high-risk actions        │
+└────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                          EVIDENCE LAYER                            │
+│                                                                    │
+│   📁 diagnostic-archive                                            │
+│   Read run archives, locate root causes, and provide evidence for  │
+│   retries, approvals, and disputed plans                           │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+This README specifically fixes the old repo-front mismatch:
+
+- ✅ badges now show **Phase 2**
+- ✅ released count now shows **7 skills**
+- ✅ architecture diagram now reflects the **4-layer system**
+- ✅ the README itself explains skill relationships instead of outsourcing all context to `ARCHITECTURE.md`
+
+---
+
+## What each of the 7 skills does
+
+### The 6 roles in the main architecture
+
+| Skill | Layer | Role | Responsible for | Not responsible for |
+|---|---|---|---|---|
+| `agent-work-environment-v3` | Tactics | Zhu Xian Formation | detect task intent, choose the formation, shape next-step workflow | does not define safety laws, deep-plan, or authorize |
+| `environment-governance` | Governance | Three-Body Laws | define boundaries from risk, complexity, failure state, and write intent | does not route tasks or replace execution skills |
+| `wallfacer` | Strategy | Wallfacer | converge candidate paths and choose a main plan for complex work | does not challenge its own plan or authorize |
+| `wallbreaker` | Strategy | Wallbreaker | break plans, expose blind spots and unverified assumptions | does not create the first plan |
+| `swordbearer` | Strategy | Swordbearer | final allow / pause / deny decision on high-risk actions | does not perform the full risk-identification layer |
+| `diagnostic-archive` | Evidence | Archive Reader | read archives and reconstruct failure evidence | does not fix bugs, rerun tasks, or replace planning |
+
+### The 1 compatibility skill
+
+| Skill | Position | Notes |
+|---|---|---|
+| `agent-work-environment` | compatibility combined version | merges routing + governance into one skill for users who want a single install path; the main direction remains the split architecture |
+
+---
+
+## How they work together
+
+The important thing here is the **interaction model**—how these skills cooperate in sequence.
+
+### 1) Standard task
+
+```text
+User task
+  → agent-work-environment-v3
+  → environment-governance
+  → execution skill
+```
+
+Use for: ordinary implementation, routine fixes, clear single-path tasks.
+
+### 2) Complex task
+
+```text
+User task
+  → agent-work-environment-v3
+  → environment-governance
+  → wallfacer
+  → execution skill
+```
+
+Use for: refactors, multi-stage changes, cross-module work.
+
+### 3) Complex and controversial task
+
+```text
+User task
+  → agent-work-environment-v3
+  → environment-governance
+  → wallfacer
+  → wallbreaker
+  → execution skill
+```
+
+Use for: plan-heavy work, expensive rework risk, disputed directions.
+
+### 4) High-risk task
+
+```text
+User task
+  → agent-work-environment-v3
+  → environment-governance
+  → swordbearer
+  → careful / guard / execution skill
+```
+
+Use for: deletion, force-push, production config changes, credential edits.
+
+### 5) High-risk task that already failed before
+
+```text
+User task
+  → agent-work-environment-v3
+  → environment-governance
+  → diagnostic-archive
+  → swordbearer
+  → execution skill
+```
+
+Use for: risky work that already has failure history.
+
+---
+
+## Why the naming matters
+
+### Three-Body defines the boundary
+
+What *The Three-Body Problem* gives this repository is a strong **boundary philosophy**.
+
+- context is scarce, so resources must be conserved
+- environments mutate, so escalation paths matter
+- broader exposure increases failure surface: that is the Dark Forest law in agent terms
+- high-risk actions should be governed by deterrence and decision, not impulse
+
+So:
+
+> **Dark Forest is a governing law here. It frames how exposure and caution are understood; it is not a concrete execution skill.**
+
+### Zhu Xian Formation decides the approach
+
+What Zhu Xian Formation gives this repository is a **task-mode model**.
+
+The same user request can require completely different modes:
+
+- inspect first
+- implement directly
+- verify first
+- write documentation
+- operate carefully in ops mode
+
+That is why `agent-work-environment-v3` starts by deciding:
+
+> **which formation the work should enter.**
+
+---
+
+## The five formations of Zhu Xian
+
+| Formation | Mode | Typical use |
+|---|---|---|
+| Guan Ji | Research | inspect structure, patterns, and unknowns first |
+| Po Ju | Implementation | execute after the goal is clear |
+| Ming Jian | Verification | testing, checking, regression, acceptance |
+| Li Yan | Writing | docs, design notes, summaries, release text |
+| Xing Ling | Operations | deployment, config changes, environment actions |
+
+These five formations work more like a **working-mode menu**.
+
+---
+
+## The core of Three-Body Laws
+
+`environment-governance` is not trying to win by stacking more rules. Its job is to read the situation and tighten or relax the boundary accordingly.
+
+### Five laws
+
+- Context Budget
+- Tool Boundary
+- Risk Escalation
+- Writeback Policy
+- Diagnostic Access
+
+### Four core signals
+
+- `risk_level`
+- `task_complexity`
+- `has_failed`
+- `write_intent`
+
+Its real value is this:
+
+> The real move is understanding the situation first, then deciding how strict the boundary should be.
+
+---
+
+## What to install and when
+
+### I only want the core setup
+
+If you only want the core “choose mode first, define boundary second” behavior:
+
+```bash
+./install.sh claude
+```
+
+This installs:
+
+- `agent-work-environment-v3`
+- `environment-governance`
+
+Best for: most first-time users of three-body.
+
+### I need failure diagnosis
 
 ```bash
 ./install.sh claude --with-archive
 ```
 
-Supported targets:
+Adds:
 
-- `claude`
-- `opencode`
-- `openclaw`
+- `diagnostic-archive`
 
-See [install.sh](./install.sh) for options.
+Best for: users who already rely on run archives or regularly investigate failures.
 
----
+### I need the full strategy layer
 
-## 💡 Why "three-body"
-
-I am an avid reader of Liu Cixin's *The Three-Body Problem*.
-
-In the novel, the Trisolaran civilization evolved unique survival wisdom in an extremely unstable environment. Their world has three suns with unpredictable orbits, and civilization repeatedly rises and falls between Stable Eras and Chaotic Eras. To survive, Trisolarans developed strategies of **dehydration**, **rehydration**, and **radical rationality**.
-
-AI Agents face a strikingly similar situation:
-- Context windows are limited resources, like Trisolarans' dehydrated state
-- User inputs are unpredictable, like the arrival of Chaotic Eras
-- A single wrong tool call can destroy the entire session, like the three suns appearing together
-
-**three-body** draws on the core concepts of the novel to build a governance system for AI Agents: **establishing deterministic constraints and routing rules in an uncertain environment**.
-
-This is not a simple adaptation of the original work, but a tribute to its spirit—
-> The Wallfacer's silence against the Sophons, the Swordbearer's understanding of deterrence, and the Dark Forest's philosophy of "safety through concealment."
-
----
-
-## 🎭 Naming Logic: Three-Body × Zhu Xian Formation
-
-### The Fusion of Sci-Fi and Mythology
-
-| Cultural Origin | Concept | System Position | Core Function |
-|:---:|:---|:---|:---|
-| 📚 Liu Cixin's *The Three-Body Problem* | **Three-Body Laws** | Governance Layer | Define boundaries, constrain behavior |
-| ⚔️ Chinese Mythology | **Zhu Xian Formation** | Tactics Layer | Provide paths, flexible execution |
-
-### Three-Body — The Cosmic Law Layer
-
-*The Three-Body Problem* emphasizes: In an unpredictable universe, the first principle of survival is **recognizing boundaries**.
-
-- **Dehydration**: conserving strength when resources are limited → Context budget management
-- **Chaotic Era**: coping strategies when environments mutate → Risk escalation mechanism
-- **Dark Forest**: exposure means danger → Confirmation culture (unconfirmed = exposed)
-- **Swordbearer Deterrence**: those with the power to destroy choose not to fire → Final authorization for high-risk operations
-
-**Three-Body represents "constraint"** — telling the Agent what cannot be done and when it must stop.
-
-### Zhu Xian Formation — The Tactical Execution Layer
-
-Zhu Xian Formation (诛仙阵) is a supreme killing formation in Chinese mythology, with ever-changing patterns inside. Those who enter must follow specific paths to break the formation.
-
-- **Observing the formation** → Look before acting → **Guan Ji Formation** (Research Mode)
-- **Breaking the formation's eye** → Strike at the core → **Po Ju Formation** (Implementation Mode)
-- **Verifying the formation** → Check for completeness → **Ming Jian Formation** (Verification Mode)
-- **Recording the formation** → Document the strategy → **Li Yan Formation** (Writing Mode)
-- **Executing orders** → High-risk operations with caution → **Xing Ling Formation** (Ops Mode)
-
-**Zhu Xian Formation represents "change"** — flexible tactical choices within constraints.
-
-### The Logical Relationship
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        UNIVERSE LAYER                            │
-│                                                                  │
-│                        📚 THREE-BODY                             │
-│                   Three-Body Problem                             │
-│                                                                  │
-│       "Establish deterministic boundaries in an                  │
-│                    unpredictable universe"                       │
-│                                                                  │
-│   ┌──────────────┬────────────────────────────────────────┐     │
-│   │  Dehydration │  Context is limited, must be conserved │     │
-│   │  Dark Forest │  Unconfirmed = exposed, exposed = error│     │
-│   │  Deterrence  │  High-risk ops need final authorization│     │
-│   └──────────────┴────────────────────────────────────────┘     │
-│                              │                                   │
-│                              ▼ Tactical choices under law        │
-│   ╔══════════════════════════════════════════════════════╗      │
-│   ║                                                    ║      │
-│   ║   THREE-BODY DEFINES THE BOUNDARY                 ║      │
-│   ║   三 体 定 其 界                                   ║      │
-│   ║                                                    ║      │
-│   ╚══════════════════════════════════════════════════════╝      │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        TACTICS LAYER                             │
-│                                                                  │
-│                    ⚔️ ZHU XIAN FORMATION                         │
-│                     Formation Router                             │
-│                                                                  │
-│           "Use formation changes to survive                      │
-│                 within constraints"                              │
-│                                                                  │
-│        ┌─────────────┐    ┌─────────────┐    ┌─────────────┐   │
-│        │  Guan Ji    │───▶│  Po Ju      │───▶│  Ming Jian  │   │
-│        │  Research   │    │  Implement  │    │  Verify     │   │
-│        └─────────────┘    └─────────────┘    └─────────────┘   │
-│               │                                      │          │
-│               └──────────────┬───────────────────────┘          │
-│                              ▼                                  │
-│        ┌─────────────┐    ┌─────────────┐                      │
-│        │  Li Yan     │    │  Xing Ling  │                      │
-│        │  Write      │    │  Ops        │                      │
-│        └─────────────┘    └─────────────┘                      │
-│                                                                  │
-│   ╔══════════════════════════════════════════════════════╗      │
-│   ║                                                    ║      │
-│   ║   FORMATION DECIDES THE APPROACH                  ║      │
-│   ║   诛 仙 阵 定 其 式                                ║      │
-│   ║                                                    ║      │
-│   ╚══════════════════════════════════════════════════════╝      │
-└─────────────────────────────────────────────────────────────────┘
+```bash
+./install.sh claude --with-strategy
 ```
 
-**In one sentence**:
-> **Three-Body defines the boundary (law constraint). Zhu Xian Formation decides the approach (tactical execution).**
-> 
-> Cold cosmic laws + Mysterious Eastern formations = A governance system for AI Agents that is both safe and flexible.
+Adds:
+
+- `wallfacer`
+- `wallbreaker`
+- `swordbearer`
+
+Best for: users with complex work, plan-heavy tasks, or high-risk action review needs.
+
+### I want the recommended full install
+
+```bash
+./install.sh claude --with-strategy --with-archive
+```
+
+Best for: installing the full four-layer system in one shot.
+
+Manual copy also works:
+
+```bash
+cp -r environment-governance ~/.claude/skills/
+cp -r agent-work-environment-v3 ~/.claude/skills/
+cp -r diagnostic-archive ~/.claude/skills/
+cp -r wallfacer ~/.claude/skills/
+cp -r wallbreaker ~/.claude/skills/
+cp -r swordbearer ~/.claude/skills/
+```
+
+Compatibility combined mode:
+
+```bash
+./install.sh claude --classic
+```
 
 ---
 
-## 🎯 Problems Solved
+## Supported platforms
 
-AI Agents face two fundamental problems in use:
-
-| Problem | Manifestation | three-body's Answer |
+| Platform | Identifier | Status |
 |---|---|---|
-| **How to do it safely?** | Don't know when to pause and confirm, blindly execute high-risk operations | Three-Body Laws (`environment-governance`) |
-| **What mode to use?** | Facing vague tasks without knowing which working state to enter | Zhu Xian Formation (`agent-work-environment-v3`) |
+| Claude Code | `claude` | ✅ verified |
+| Opencode | `opencode` | ✅ verified |
+| OpenClaw | `openclaw` | ✅ verified |
 
-**Decoupled design**: The governance layer manages constraints, the routing layer manages modes. Independent but combinable.
-
-For the full system layering, call sequence, and technical roadmap, see:
-
-- [ARCHITECTURE.md](./ARCHITECTURE.md)
+More install details: [`install.sh`](./install.sh)
 
 ---
 
-## 🏗️ Current Architecture (Phase 1)
+## What changes after installation
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                   APPLICATION LAYER                      │
-│                                                          │
-│   ⚔️ Formation Router          📁 Archive Reader         │
-│   agent-work-environment-v3    diagnostic-archive        │
-│   Zhu Xian Formation            Archive Reader           │
-│   (5 formations routing)        (failure diagnosis)      │
-│                                                          │
-├──────────────────────────────────────────────────────────┤
-│                   GOVERNANCE LAYER                       │
-│                                                          │
-│              ⚖️ Three-Body Laws                          │
-│              environment-governance                      │
-│         Five Laws · 4-Signal Model · Dynamic Bias       │
-│                                                          │
-│   Core Philosophy: Dark Forest Law                       │
-│   (Concealment is safety. Swordbearer deterrence.)      │
-│                                                          │
-├──────────────────────────────────────────────────────────┤
-│                   EXECUTION LAYER                        │
-│         Code · review · careful · guard · ...            │
-└──────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📦 Released Skills
-
-### ⚖️ Three-Body Laws
-**`environment-governance`** · v1.0 · [Details](./environment-governance/README.md)
-
-Independent behavioral constraint layer. Five Laws + 4-Signal Model, dynamically calculating Agent behavioral boundaries in different risk scenarios.
-
-```
-Five Laws:   Context Budget · Tool Boundary · Risk Escalation ·
-             Writeback Policy · Diagnostic Access
-4 Signals:   risk_level · task_complexity · has_failed · write_intent
-```
-
----
-
-### ⚔️ Formation Router — Zhu Xian Formation
-**`agent-work-environment-v3`** · v3.0 · [Details](./agent-work-environment-v3/README.md)
-
-Pure task router. Identify task intent → Select one of five formations → Output task signals → Recommend downstream skill.
-
-```
-Five Formations:
-  Guan Ji  (Research)  · Po Ju   (Implementation) ·
-  Ming Jian (Verify)   · Li Yan  (Writing)        ·
-  Xing Ling (Ops)
-```
-
----
-
-### 📁 Archive Reader
-**`diagnostic-archive`** · v1.0 · [Details](./diagnostic-archive/README.md)
-
-Failure diagnosis and historical comparison. Read run archives, locate root causes, support single-run diagnosis and dual-run comparison.
-
-Archive format and generation notes: [RUN-ARCHIVES.md](./diagnostic-archive/RUN-ARCHIVES.md)
-
----
-
-### ⚔️ Swordbearer
-**`swordbearer`** · v0.1 · [Details](./swordbearer/README.md)
-
-The first landed strategy-layer role in Phase 2. It performs final authorization before high-risk actions are executed: allow, pause, deny, or require more context.
-
----
-
-### 🧱 Wallfacer
-**`wallfacer`** · v0.1 · [Details](./wallfacer/README.md)
-
-The second landed strategy-layer role in Phase 2. It performs deep planning before complex tasks move into implementation: compare candidate paths, choose a main path, mark critical unknowns, and decide the next handoff.
-
----
-
-### 🔓 Wallbreaker
-**`wallbreaker`** · v0.1 · [Details](./wallbreaker/README.md)
-
-The third landed strategy-layer role in Phase 2. It performs adversarial scrutiny on existing plans: exposing hidden assumptions, surfacing failure modes, demanding validation, and deciding whether a plan should proceed.
-
----
-
-## 🔬 What Changes After Installation
-
-If you are skeptical that these skills are “just natural-language rules,” start with the smallest proof:
+If you suspect this is “just a prettier system prompt,” look at the smallest proof first:
 
 - [examples/behavior-diff.md](./examples/behavior-diff.md)
 
 It compares the same high-risk prompt in three states:
 
-- no three-body installed
-- only `environment-governance`
-- routing + governance installed together
+1. no three-body installed
+2. only `environment-governance`
+3. routing + governance installed together
+
+The difference is not just style. The real change is in the **decision chain**.
 
 ---
 
-### 🔶 Formation Classic — Zhu Xian Formation Combined (Backward Compatible)
-**`agent-work-environment`** · v2.1 · [Details](./agent-work-environment/README.md)
+## Best-fit scenarios
 
-Routing + Governance integrated version. Out-of-the-box option when you don't want separate management, no longer actively iterated.
+### Best fit for people who:
 
----
+- you use coding agents continuously, not just for one-off prompts
+- you care about high-risk boundaries, not only speed
+- your work spans research, implementation, verification, documentation, and ops
+- you want complex tasks to be planned before execution
+- you want failures investigated from evidence instead of instinctive retries
 
-## 🖥️ Supported Platforms
+### Probably overkill if you only need:
 
-three-body works with the following AI Agent development environments:
+- single-turn Q&A
+- a few quick code lines
+- no safety boundary or behavior consistency at all
 
-| Platform | Identifier | Installation | Status |
-|:---:|:---:|:---|:---:|
-| **Claude Code** | `claude` | Skill directory installation | ✅ Verified |
-| **Opencode** | `opencode` | Skill directory installation | ✅ Verified |
-| **OpenClaw** | `openclaw` | Skill directory installation | ✅ Verified |
-| **Codex CLI** | `codex` | Configuration / MCP | ✅ Verified |
-
-### Platform-Specific Installation
-
-#### Claude Code
-
-```bash
-# Recommended: Install split version (v3.0)
-cp -r three-body/environment-governance ~/.claude/skills/
-cp -r three-body/agent-work-environment-v3 ~/.claude/skills/
-
-# Optional: Archive Reader
-cp -r three-body/diagnostic-archive ~/.claude/skills/
-
-# Verify installation
-claude skills list
-```
-
-#### Opencode
-
-```bash
-# Recommended: Install split version (v3.0)
-cp -r three-body/environment-governance ~/.opencode/skills/
-cp -r three-body/agent-work-environment-v3 ~/.opencode/skills/
-
-# Verify installation
-opencode skills list
-```
-
-#### OpenClaw
-
-OpenClaw supports loading custom skills via the Skill directory:
-
-```bash
-# Create OpenClaw skills directory (if not exists)
-mkdir -p ~/.openclaw/skills
-
-# Install three-body skills
-cp -r three-body/environment-governance ~/.openclaw/skills/
-cp -r three-body/agent-work-environment-v3 ~/.openclaw/skills/
-cp -r three-body/diagnostic-archive ~/.openclaw/skills/
-
-# Enable in OpenClaw config (usually ~/.openclaw/config.yaml)
-# skills:
-#   - environment-governance
-#   - agent-work-environment-v3
-#   - diagnostic-archive
-```
-
-#### Codex CLI
-
-Codex CLI can incorporate three-body via **System Prompt** or **MCP (Model Context Protocol)**:
-
-**Method 1: System Prompt (Recommended)**
-
-Create or edit the Codex configuration file:
-
-```bash
-# macOS/Linux
-mkdir -p ~/.codex
-cat > ~/.codex/config.toml << 'EOF'
-[system]
-prompt = """
-You are an AI Agent with three-body governance.
-
-Always follow these principles from the Three-Body Laws:
-1. Context Budget - Conserve context window, load on demand
-2. Tool Boundary - Prefer low-risk tools, confirm high-risk ones
-3. Risk Escalation - Pause before destructive operations
-4. Writeback Policy - Confirm based on change type
-5. Diagnostic Access - Read raw evidence when debugging
-
-For task routing, use the Zhu Xian Formation approach:
-- Research tasks → Guan Ji Formation (observation mode)
-- Implementation → Po Ju Formation (breakthrough mode)
-- Verification → Ming Jian Formation (inspection mode)
-- Writing → Li Yan Formation (documentation mode)
-- Operations → Xing Ling Formation (command mode with extra caution)
-"""
-EOF
-```
-
-**Method 2: MCP (if supported)**
-
-Add to Codex's MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "three-body-governance": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
-      "env": {
-        "SKILLS_PATH": "~/three-body"
-      }
-    }
-  }
-}
-```
-
-**Method 3: Direct SKILL.md Content**
-
-Copy the contents of `environment-governance/SKILL.md` and `agent-work-environment-v3/SKILL.md` into Codex's system prompt.
-
-### Usage
-
-Once installed, use trigger phrases in conversation:
-
-| Trigger Scenario | Description |
-|---|---|
-| `"Help me analyze this module"` | Auto enters Zhu Xian Formation → Guan Ji Formation (Research Mode) |
-| `"Implement this feature, but carefully"` | Auto enters Zhu Xian Formation → Po Ju Formation (Implementation Mode) + Three-Body Laws constraints |
-| `"Why did that run fail last time?"` | Invokes Archive Reader for failure diagnosis |
-| `"Deploy to production"` | Auto enters Xing Ling Formation (Ops Mode) + `environment-governance` high-risk confirmation flow |
+In those cases, three-body will likely feel heavier than necessary.
 
 ---
 
-## 🚀 Quick Install (Claude Code Example)
+## Technical roadmap
 
-```bash
-# Recommended: Split version (v3.0), routing and governance separated
-cp -r environment-governance ~/.claude/skills/
-cp -r agent-work-environment-v3 ~/.claude/skills/
+### Phase 1: foundational layer
 
-# Optional: Strategy layer (Phase 2)
-cp -r swordbearer ~/.claude/skills/
-cp -r wallfacer ~/.claude/skills/
-cp -r wallbreaker ~/.claude/skills/
+Completed:
 
-# Optional: Failure diagnosis
-cp -r diagnostic-archive ~/.claude/skills/
+- `environment-governance`
+- `agent-work-environment-v3`
+- `diagnostic-archive`
 
-# Or: Combined version (v2.1), out-of-the-box
-cp -r agent-work-environment ~/.claude/skills/
-```
+Core value:
 
-If you use the repository installer, the equivalent commands are:
+> choose the mode, define the boundary, read the evidence.
 
-```bash
-# Base split install
-./install.sh claude
+### Phase 2: strategy layer
 
-# Base split + archive reader
-./install.sh claude --with-archive
+Completed:
 
-# Base split + strategy layer (all three roles)
-./install.sh claude --with-strategy
+- `wallfacer`
+- `wallbreaker`
+- `swordbearer`
 
-# Base split + strategy layer + archive reader
-./install.sh claude --with-strategy --with-archive
+Core value:
 
-# Classic combined mode
-./install.sh claude --classic
-```
+> plan, challenge, authorize.
 
-### When the strategy layer is worth installing
+### Phase 3: intelligence and long memory
 
-Install `swordbearer / wallfacer / wallbreaker` when:
+Planned:
 
-- you want a final authorization layer before high-risk actions
-- you often face complex multi-stage tasks that benefit from explicit planning first
-- you want plans challenged before execution, not only reviewed afterward
+- `sophon`
 
-If you want the lightest possible three-body setup, stay with the base split install.
+Not implemented yet, and should not be confused with Phase 2.
 
 ---
 
-## 🧪 Repo Validation
+## Repository structure
 
-Before packaging or publishing, run the local validator:
+```text
+three-body/
+├── README.md
+├── README_EN.md
+├── ARCHITECTURE.md
+├── UNIVERSE.md
+│
+├── environment-governance/      # Three-Body Laws
+├── agent-work-environment-v3/   # Zhu Xian Formation (main)
+├── diagnostic-archive/          # Archive Reader
+├── wallfacer/                   # Wallfacer
+├── wallbreaker/                 # Wallbreaker
+├── swordbearer/                 # Swordbearer
+├── agent-work-environment/      # compatibility combined version
+│
+├── scripts/
+│   ├── validate-repo.ps1
+│   └── build-skill-packages.ps1
+│
+└── examples/
+```
+
+---
+
+## Validation and packaging
+
+### Validate repo consistency
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\validate-repo.ps1
 ```
 
-It checks:
-
-- Whether the root `LICENSE` file exists
-- Whether each skill package includes both `SKILL.md` and `README.md`
-- Whether each skill package has a matching `.skill` packaged artifact
-- Whether strategy-layer skills (`swordbearer` / `wallfacer` / `wallbreaker`) also include `CHANGELOG.md` and `EXAMPLES.md`
-- Whether strategy-layer skills are synchronized into `README.md`, `README_EN.md`, and `UNIVERSE.md`
-- Whether local relative Markdown links resolve correctly
-
----
-
-## 📦 Build `.skill` Artifacts
-
-The `.skill` files in the repo root are generated release artifacts from the source directories.
-
-Rebuild all artifacts:
+### Rebuild `.skill` artifacts
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1
 ```
 
-Rebuild a specific skill:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1 -SkillNames agent-work-environment-v3
-```
-
 Recommended flow:
 
-1. Edit the source directories first
-2. Run the packaging script to refresh `.skill`
-3. Run the validator to confirm release-facing files are still aligned
+1. edit source directories first
+2. rebuild `.skill`
+3. run the validator last
 
 ---
 
-## 🌍 Universe Roadmap (Phase 2+)
+## Design principles
 
-three-body is an ever-expanding universe. Planned characters:
-
-| Character | Candidate ID | Definition | Phase |
-|:---:|:---|:---|:---:|
-| ⚔️ **Swordbearer** | `swordbearer` | Final authorization for high-risk ops, deterrence > interception | **Phase 2A (in progress)** |
-| 🧱 **Wallfacer** | `wallfacer` | Independent deep planning, not exposing intermediate intent | **Phase 2B (in progress)** |
-| 🔓 **Wallbreaker** | `wallbreaker` | Questioning existing solutions, finding unverified assumptions | **Phase 2C (in progress)** |
-| 👁️ **Sophon** | `sophon` | Cross-session memory, global pattern recognition | Phase 3 |
-
-→ [Complete Universe Map](./UNIVERSE.md)
+1. **Layer before combination**: do not begin with one giant control skill
+2. **Recognize before authorize**: governance identifies risk; swordbearer decides passage
+3. **Plan before execution**: complex work should not jump straight into implementation
+4. **Challenge before commitment**: expensive plans should be broken once before being trusted
+5. **Evidence before conclusion**: after failure, inspect archives before retrying
 
 ---
 
-## 💡 Design Philosophy
+## If this is your first time here
 
-**1. Layered, Not Monolithic**
-The routing layer (Zhu Xian Formation) and governance layer (Three-Body Laws) are decoupled. Each evolves and can be reused independently.
+1. read this README first to understand the relationship between the 7 skills
+2. then read [ARCHITECTURE.md](./ARCHITECTURE.md) for the full interaction model
+3. if you want to install, go straight to [`install.sh`](./install.sh)
+4. if you want the long-term roadmap, read [UNIVERSE.md](./UNIVERSE.md)
 
-**2. Signal-Driven, Not Rule-Stacking**
-4 signals calculate bias in real-time; no need to hand-write rules for every scenario.
+If you only want to spend 5 minutes on the project, use this reading order:
 
-**3. Hard Confirmation Cannot Be Bypassed**
-Delete, force-push, credential changes — no matter how much the user urges, the governance layer has final veto power.
-
-**4. Names Are The Design**
-The Swordbearer's deterrence philosophy, the Wallfacer's deep planning, the Sophon's all-seeing perspective — character names themselves are behavioral logic documentation.
-
----
-
-## 📁 Project Structure
-
-```
-three-body/
-├── README.md                        # Chinese version (default)
-├── README_EN.md                     # This file (English)
-├── ARCHITECTURE.md                  # System relationships and call flows
-├── UNIVERSE.md                      # Universe map and roadmap
-│
-├── environment-governance/          # ⚖️ Three-Body Laws (Governance)
-│   ├── SKILL.md
-│   └── references/
-│       ├── laws.md
-│       ├── default-bias.md
-│       └── escalation-matrix.md
-│
-├── agent-work-environment-v3/       # ⚔️ Zhu Xian Formation (Router)
-│   ├── SKILL.md
-│   └── references/
-│       ├── formations.md
-│       └── formation-law-mapping.md
-│
-├── diagnostic-archive/              # 📁 Archive Reader
-│   ├── SKILL.md
-│   └── references/
-│
-├── swordbearer/                     # ⚔️ Swordbearer (Phase 2A)
-│   ├── SKILL.md
-│   └── references/
-│
-├── wallfacer/                       # 🧱 Wallfacer (Phase 2B)
-│   ├── SKILL.md
-│   └── references/
-│
-├── wallbreaker/                     # 🔓 Wallbreaker (Phase 2C)
-│   ├── SKILL.md
-│   └── references/
-│
-├── agent-work-environment/          # 🔶 Combined Version (Compatible)
-│   ├── SKILL.md
-│   └── references/
-│
-└── _backup/
-    └── agent-work-environment-v2.1/
-```
+1. read “30-second understanding”
+2. read “Current architecture (Phase 2)”
+3. read “How they work together”
+4. decide between the core install and the full install
 
 ---
 
-## 📜 License
+## License
 
-MIT License — Free to use, contributions welcome.
+[MIT](./LICENSE)
 
 ---
 
@@ -587,9 +530,12 @@ MIT License — Free to use, contributions welcome.
 
 **Three-Body defines the boundary. Zhu Xian Formation decides the approach.**
 
-[Architecture Overview](./ARCHITECTURE.md) · [Universe Map](./UNIVERSE.md) · [Three-Body Laws](./environment-governance/README.md) · [Zhu Xian Formation](./agent-work-environment-v3/README.md)
+The goal here is not to make an agent feel more omnipotent.
+The goal is to make it behave more like a **system that can survive uncertainty over time**.
+
+Many agent stacks optimize for “start doing faster.”
+three-body puts more weight on a different question: **are we about to start in the wrong direction?**
+
+[中文版](./README.md) · [Architecture](./ARCHITECTURE.md) · [Universe Map](./UNIVERSE.md)
 
 </div>
-
-
-

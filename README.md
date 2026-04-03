@@ -2,588 +2,537 @@
 
 <div align="center">
 
-**AI Agent 行为治理宇宙 · 以《三体》为灵感**
+**AI Agent 行为治理宇宙 · Inspired by *The Three-Body Problem***
 
 [![License](https://img.shields.io/badge/许可-MIT-green?style=flat-square)](./LICENSE)
-[![Platform](https://img.shields.io/badge/平台-Claude%20Code-blueviolet?style=flat-square)](https://claude.ai)
-[![Phase](https://img.shields.io/badge/Phase-1%20·%20法则基础-blue?style=flat-square)](./UNIVERSE.md)
-[![Skills](https://img.shields.io/badge/已发布-3%20skills-brightgreen?style=flat-square)]()
+[![Platform](https://img.shields.io/badge/平台-Claude%20Code%20%2F%20Opencode%20%2F%20OpenClaw-blueviolet?style=flat-square)](./install.sh)
+[![Phase](https://img.shields.io/badge/Phase-2%20·%20战略层已接入-blue?style=flat-square)](./UNIVERSE.md)
+[![Skills](https://img.shields.io/badge/已发布-7%20skills-brightgreen?style=flat-square)](./ARCHITECTURE.md)
+[![Architecture](https://img.shields.io/badge/架构-四层体系-orange?style=flat-square)](./ARCHITECTURE.md)
 
 > **三体定其界，诛仙阵定其式。**
 >
-> 一套为 AI Agent 设计的行为约束与任务路由体系，
-> 每一个 skill，都是宇宙中的一个角色。
+> 一套给 AI Agent 使用的**行为治理系统**：
+> 不只告诉 Agent **该做什么**，更告诉它 **什么时候该停、什么时候该想、什么时候该查证据、什么时候根本不能继续做**。
 
-🌐 [English Version](./README_EN.md)
-
-📘 [架构总览](./ARCHITECTURE.md)
+[English](./README_EN.md) · [架构总览](./ARCHITECTURE.md) · [宇宙地图](./UNIVERSE.md) · [安装脚本](./install.sh)
 
 </div>
 
 ---
 
-## ⚡ 一条命令安装（Mac / Linux）
+## 为什么这个仓库值得看
 
-```bash
-./install.sh claude --with-archive
-```
+大多数 agent skill 只解决一个点：
 
-支持目标：
+- 要么教模型怎么写代码
+- 要么教模型怎么调工具
+- 要么给一套“看起来很强”的提示词
 
-- `claude`
-- `opencode`
-- `openclaw`
+真实使用里，AI Agent 的问题通常不出在“能力不够”，而是更早的那几步就已经偏了：
 
-更多选项见 [install.sh](./install.sh)。
+1. **没先判断任务属于哪种工作模式**
+2. **没有清楚的风险边界**
+3. **复杂任务直接开做，没有先规划**
+4. **方案看起来合理，但没人专门拆它**
+5. **高危动作知道危险，却没有最终裁决者**
+6. **失败以后不回证据，只靠猜**
 
----
+**three-body** 解决的正是这整条链路。
 
-## 💡 为什么叫 three-body
+three-body 由四层组成，可以拆开装，也可以串起来用：
 
-我是刘慈欣《三体》的忠实读者。
-
-小说里，三体文明在极端不稳定的环境中演化出了独特的生存智慧。他们的世界有三个太阳，轨道不可预测，文明在恒纪元和乱纪元之间反复毁灭与重生。为了活下去，三体人发展出了**脱水**、**浸泡**、**极度理性**的生存策略。
-
-AI Agent 面临的处境何其相似：
-- 上下文窗口是有限的资源，像三体人的脱水状态
-- 用户输入不可预测，像乱纪元的降临
-- 一次错误的工具调用，可能毁掉整个会话，像三日凌空
-
-**three-body** 正是借鉴《三体》的核心概念，为 AI Agent 构建一套行为治理体系：**在不确定的环境中，建立确定性的约束与路由规则**。
-
-这不是对原著的简单套用，而是对其精神的致敬——
-> 面壁人对智子的静默、执剑人对威慑的理解、黑暗森林中"不暴露即安全"的生存哲学。
+- **战术层**：先决定现在该以什么模式工作
+- **治理层**：再决定当前边界、确认和升级策略
+- **战略层**：在复杂或高危场景下，插入规划 / 质疑 / 授权角色
+- **证据层**：失败后回到 archive 看证据，避免继续靠猜
 
 ---
 
-## 🎭 命名逻辑：三体 × 诛仙阵
+## 它解决什么问题
 
-### 科幻与神话的融合
+| 真实问题 | 常见失败表现 | three-body 的回答 |
+|---|---|---|
+| 任务一上来就开做 | 明明该先分析，却直接写代码或直接改配置 | `agent-work-environment-v3` 先选工作阵型 |
+| 风险边界不清 | 该确认的时候不确认，不该继续的时候继续做 | `environment-governance` 先定义边界 |
+| 复杂任务边做边想 | 路线频繁漂移，返工成本高 | `wallfacer` 先收敛方案 |
+| 方案没人挑战 | 隐含假设没暴露，最后在执行期爆炸 | `wallbreaker` 专门拆方案 |
+| 高危动作无人裁决 | 知道危险，但没人决定能不能放行 | `swordbearer` 做最终授权 |
+| 失败后靠直觉重试 | 不读日志、不比对 run、重复犯错 | `diagnostic-archive` 回证据层 |
 
-| 文化来源 | 代表概念 | 体系定位 | 核心功能 |
-|:---:|:---|:---|:---|
-| 📚 刘慈欣《三体》 | **三体法则** | 治理层 | 定义边界、约束行为 |
-| ⚔️ 中国神话 | **诛仙阵** | 战术层 | 提供路径、灵活执行 |
+一句话：
 
-### 三体 —— 宇宙法则层
+> **three-body 关心的不是“赶紧开始做”，而是“先把方向和边界站稳”。**
 
-《三体》小说强调：在一个不可预测的宇宙中，生存的第一要义是**认清边界**。
+---
 
-- **脱水**：资源有限时保存实力 → 上下文预算管理
-- **乱纪元**：环境突变时的应对策略 → 风险升级机制
-- **黑暗森林**：暴露即危险 → 确认文化（不确认即暴露）
-- **执剑人威慑**：拥有毁灭权的人选择不开火 → 高危操作的最终授权
+## 30 秒快速理解
 
-**三体代表"约束"**——告诉 Agent 什么不能做、在什么情况下必须停下。
+如果你只想先抓住这个项目的核心，可以直接记这四句话：
 
-### 诛仙阵 —— 战术执行层
+- **诛仙阵**先判断：现在该用什么工作模式
+- **三体法则**再判断：当前边界在哪里
+- **战略层三角色**只在复杂或高危场景出现
+- **档案读取器**负责在失败后把决策重新拉回证据
 
-诛仙阵是中国神话中的顶级杀阵，阵内变化万千，入阵者需按特定路径破阵。
+把这套东西想清楚，其实就一句话：它把 Agent 的行为链路拆成了：
 
-- **观阵势** → 先看清再动 → **观机阵**（研究模式）
-- **破阵眼** → 直击核心 → **破局阵**（实现模式）
-- **验阵法** → 检查无漏 → **明鉴阵**（验证模式）
-- **立阵图** → 记录方案 → **立言阵**（写作模式）
-- **行军令** → 高风险慎行 → **行令阵**（运维模式）
+> **模式选择 → 边界定义 → 战略介入 → 证据回看**
 
-**诛仙阵代表"变化"**——在约束之下，仍有灵活的战术选择。
+---
 
-### 两者的逻辑关系
+## 当前架构（Phase 2）
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        宇宙层 · UNIVERSE                         │
-│                                                                  │
-│                        📚 三  体                                 │
-│                   Three-Body Problem                             │
-│                                                                  │
-│              "在不可预测的宇宙中建立确定性边界"                   │
-│                                                                  │
-│   ┌──────────────┬────────────────────────────────────────┐     │
-│   │   脱水生存   │  上下文是有限的，必须精打细算          │     │
-│   │   黑暗森林   │  不确认即暴露，暴露即错误              │     │
-│   │   执剑人威慑 │  高危操作需要最终授权                  │     │
-│   └──────────────┴────────────────────────────────────────┘     │
-│                              │                                   │
-│                              ▼ 法则约束下的战术选择               │
-│   ╔══════════════════════════════════════════════════════╗      │
-│   ║                                                    ║      │
-│   ║   三 体 定 其 界                                   ║      │
-│   ║   Three-Body Laws define the boundary             ║      │
-│   ║                                                    ║      │
-│   ╚══════════════════════════════════════════════════════╝      │
-└─────────────────────────────────────────────────────────────────┘
+```text
+┌────────────────────────────────────────────────────────────────────┐
+│                        战术层 · TACTICS                           │
+│                                                                    │
+│   ⚔️ agent-work-environment-v3                                     │
+│   诛仙阵：识别任务意图，选择研究 / 实现 / 验证 / 写作 / 运维模式     │
+└────────────────────────────────────────────────────────────────────┘
                               │
                               ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        战术层 · TACTICS                          │
-│                                                                  │
-│                        ⚔️ 诛仙阵                                 │
-│                   Formation Router                               │
-│                                                                  │
-│              "在约束之下，用阵法变化求生存"                       │
-│                                                                  │
-│        ┌─────────┐    ┌─────────┐    ┌─────────┐               │
-│        │ 观机阵  │───▶│ 破局阵  │───▶│ 明鉴阵  │               │
-│        │ 研究    │    │ 实现    │    │ 验证    │               │
-│        └─────────┘    └─────────┘    └─────────┘               │
-│              │                                     │            │
-│              └────────────┬────────────────────────┘            │
-│                           ▼                                     │
-│        ┌─────────┐    ┌─────────┐                              │
-│        │ 立言阵  │    │ 行令阵  │                              │
-│        │ 写作    │    │ 运维    │                              │
-│        └─────────┘    └─────────┘                              │
-│                                                                  │
-│   ╔══════════════════════════════════════════════════════╗      │
-│   ║                                                    ║      │
-│   ║   诛 仙 阵 定 其 式                                ║      │
-│   ║   Formation decides the approach                  ║      │
-│   ║                                                    ║      │
-│   ╚══════════════════════════════════════════════════════╝      │
-└─────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────┐
+│                       治理层 · GOVERNANCE                          │
+│                                                                    │
+│   ⚖️ environment-governance                                        │
+│   三体法则：根据信号定义确认、升级、写回、诊断访问等行为边界         │
+│                                                                    │
+│   底层哲学：黑暗森林法则                                            │
+│   含义是“先控制暴露面，再决定行动”，它代表一套法则，不是具体工具       │
+└────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                        战略层 · STRATEGY                           │
+│                                                                    │
+│   🧱 wallfacer   → 深度规划                                         │
+│   🔓 wallbreaker → 对抗式审查                                       │
+│   ⚔️ swordbearer → 高危动作最终授权                                 │
+└────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌────────────────────────────────────────────────────────────────────┐
+│                       证据层 · EVIDENCE                             │
+│                                                                    │
+│   📁 diagnostic-archive                                            │
+│   读取 run archives，定位根因，为重试、授权和方案争议提供证据         │
+└────────────────────────────────────────────────────────────────────┘
 ```
 
-**一句话总结**：
-> **三体定其界（法则约束），诛仙阵定其式（战术执行）。**
-> 
-> 冷酷的宇宙法则 + 玄妙的东方阵法 = 既安全又灵活的 AI Agent 治理体系。
+这也是这次 README 重点修复的地方：
+
+- ✅ 顶部 Phase 已更新为 **Phase 2**
+- ✅ 顶部 skills 数量已更新为 **7 skills**
+- ✅ 架构图已从旧的三层视图更新为**四层体系**
+- ✅ README 本身已解释 skills 关系，不再只靠 `ARCHITECTURE.md`
 
 ---
 
-## 🎯 解决什么问题
+## 7 个 skills 各自干什么
 
-AI Agent 在使用中面临两个根本问题：
+### 主架构中的 6 个角色
 
-| 问题 | 表现 | three-body 的回答 |
+| Skill | 层级 | 角色定位 | 负责什么 | 不负责什么 |
+|---|---|---|---|---|
+| `agent-work-environment-v3` | 战术层 | 诛仙阵 | 识别任务意图，选择阵型，给出下一步工作方式 | 不定义安全边界、不深度规划、不做最终授权 |
+| `environment-governance` | 治理层 | 三体法则 | 根据风险、复杂度、失败状态等信号决定边界 | 不负责路由、不代替执行 skill |
+| `wallfacer` | 战略层 | 面壁人 | 在复杂任务前收敛候选路径，给出主方案 | 不做对抗审查、不做最终授权 |
+| `wallbreaker` | 战略层 | 破壁人 | 对已有方案做拆解，暴露盲点和未验证假设 | 不负责初始规划 |
+| `swordbearer` | 战略层 | 执剑人 | 在高危动作前给出 allow / pause / deny 判断 | 不负责全面风险识别 |
+| `diagnostic-archive` | 证据层 | 档案读取器 | 从 run archives 读取事实、还原失败原因 | 不修 bug、不重跑任务、不替代规划 |
+
+### 兼容保留的 1 个角色
+
+| Skill | 定位 | 说明 |
 |---|---|---|
-| **怎么做更安全？** | 不知道何时停下来确认，盲目执行高危操作 | 三体法则（`environment-governance`）|
-| **用什么模式做？** | 面对模糊任务不知道进入哪种工作状态 | 诛仙阵（`agent-work-environment-v3`）|
-
-两层**解耦设计**：法则层管约束，路由层管模式。各自独立，也可组合。
-
-如果你想看完整的系统层次、调用顺序和技术路线，请直接看：
-
-- [ARCHITECTURE.md](./ARCHITECTURE.md)
+| `agent-work-environment` | 兼容组合版 | 将“路由 + 治理”合并在一个 skill 中，适合想快速上手、不想拆装的人；当前主线仍然是 split 架构 |
 
 ---
 
-## 🏗️ 当前架构（Phase 1）
+## 它们之间怎么协作
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                   应用层 · APPLICATION                    │
-│                                                          │
-│   ⚔️ Formation Router          📁 Archive Reader         │
-│   agent-work-environment-v3    diagnostic-archive        │
-│   诛仙阵 · 五阵型任务路由       档案读取器 · 失败诊断      │
-│                                                          │
-├──────────────────────────────────────────────────────────┤
-│                   治理层 · GOVERNANCE                     │
-│                                                          │
-│              ⚖️ Three-Body Laws                          │
-│              environment-governance                      │
-│         五条法则 · 4信号模型 · 动态偏置计算              │
-│                                                          │
-│   底层精神：黑暗森林法则（不暴露即安全，执剑人威慑）      │
-│                                                          │
-├──────────────────────────────────────────────────────────┤
-│                   执行层 · EXECUTION                      │
-│         Code · review · careful · guard · ...            │
-└──────────────────────────────────────────────────────────┘
+README 真正需要讲清楚的，是这几个 skill 在什么顺序下协作。
+
+### 1) 普通任务
+
+```text
+用户任务
+  → agent-work-environment-v3
+  → environment-governance
+  → execution skill
 ```
 
----
+适合：普通实现、常规修复、明确单路径任务。
 
-## 📦 已发布 Skills
+### 2) 复杂任务
 
-### ⚖️ Three-Body Laws — 三体法则
-**`environment-governance`** · v1.0 · [查看详情](./environment-governance/README.md)
-
-独立的行为约束层。五条法则 + 4 信号模型，动态计算 Agent 在不同风险场景下的行为边界。
-
-```
-五条法则：上下文预算 · 工具边界 · 风险升级 · 写回策略 · 诊断访问
-4 个信号：risk_level · task_complexity · has_failed · write_intent
+```text
+用户任务
+  → agent-work-environment-v3
+  → environment-governance
+  → wallfacer
+  → execution skill
 ```
 
----
+适合：重构、多阶段改造、跨模块任务。
 
-### ⚔️ Formation Router — 诛仙阵
-**`agent-work-environment-v3`** · v3.0 · [查看详情](./agent-work-environment-v3/README.md)
+### 3) 复杂且争议大的任务
 
-纯任务路由器。识别任务意图 → 选定五阵型之一 → 输出任务信号 → 推荐下游 skill。
-
+```text
+用户任务
+  → agent-work-environment-v3
+  → environment-governance
+  → wallfacer
+  → wallbreaker
+  → execution skill
 ```
-五阵型：观机阵（研究）· 破局阵（实现）· 明鉴阵（验证）· 立言阵（写作）· 行令阵（运维）
+
+适合：方案假设很多、返工成本高、方向争议大。
+
+### 4) 高危任务
+
+```text
+用户任务
+  → agent-work-environment-v3
+  → environment-governance
+  → swordbearer
+  → careful / guard / execution skill
 ```
 
----
+适合：删除、强推、生产变更、凭证调整。
 
-### 📁 Archive Reader — 档案读取器
-**`diagnostic-archive`** · v1.0 · [查看详情](./diagnostic-archive/README.md)
+### 5) 高危且失败过的任务
 
-失败诊断与历史对比。读取 run 档案，定位根因，支持单次诊断和双次对比。
+```text
+用户任务
+  → agent-work-environment-v3
+  → environment-governance
+  → diagnostic-archive
+  → swordbearer
+  → execution skill
+```
 
-档案格式和生成方式见 [RUN-ARCHIVES.md](./diagnostic-archive/RUN-ARCHIVES.md)。
-
----
-
-### ⚔️ Swordbearer — 执剑人
-**`swordbearer`** · v0.1 · [查看详情](./swordbearer/README.md)
-
-第二阶段战略层首个落地角色。负责在高危动作真正执行前做最终授权判断：允许、暂缓、拒绝，或要求补充更多信息。
-
----
-
-### 🧱 Wallfacer — 面壁人
-**`wallfacer`** · v0.1 · [查看详情](./wallfacer/README.md)
-
-第二阶段战略层第二个落地角色。负责在复杂任务进入实现前完成深度规划：比较候选路径、选择主方案、标记关键未知，并决定下一步 handoff。
+适合：已经失败过、但仍想继续推进的高风险动作。
 
 ---
 
-### 🔓 Wallbreaker — 破壁人
-**`wallbreaker`** · v0.1 · [查看详情](./wallbreaker/README.md)
+## 三体 × 诛仙阵：为什么这个命名不是装饰
 
-第二阶段战略层第三个落地角色。负责对已有方案做对抗式审查：识别隐含假设、暴露失败模式、要求补充验证，并决定方案是否应继续推进。
+### 三体定其界
+
+《三体》给这个仓库带来的，是一套很强的**边界观**。
+
+- 上下文有限，必须像脱水一样节省资源
+- 环境突变频繁，必须像乱纪元一样考虑升级路径
+- 暴露面越大，越容易出错，这就是黑暗森林法则在 Agent 世界里的含义
+- 高危动作不靠一时冲动，而要有执剑人式的威慑与裁决
+
+所以：
+
+> **黑暗森林在这里是一条法则，也是一种思路。它不对应某个执行角色。**
+
+### 诛仙阵定其式
+
+诛仙阵给这个仓库的，是**任务模式选择**。
+
+同样是“帮我处理这个任务”，实际可能完全不同：
+
+- 有的应该先研究
+- 有的应该直接实现
+- 有的应该先验证
+- 有的应该写成文档
+- 有的属于运维，必须更谨慎
+
+所以 `agent-work-environment-v3` 的第一步，是先决定：
+
+> **现在该进哪一阵。**
 
 ---
 
-## 🔬 装了和没装的差别
+## 诛仙阵的五阵型
 
-如果你担心这类 skill 只是“自然语言约束”，先看这个最小对比示例：
+| 阵型 | 英文标识 | 使用场景 |
+|---|---|---|
+| 观机阵 | Research | 先看清结构、模式和上下文 |
+| 破局阵 | Implementation | 明确目标后直接落地实现 |
+| 明鉴阵 | Verification | 做检查、测试、回归、验收 |
+| 立言阵 | Writing | 写说明、设计文档、总结、发布文案 |
+| 行令阵 | Operations | 部署、配置、环境变更等高风险动作 |
 
-- [examples/behavior-diff.md](./examples/behavior-diff.md)
-
-它展示同一个高风险 prompt 在三种情况下的差异：
-
-- 没装 three-body
-- 只装 `environment-governance`
-- 同时装路由层和治理层
-
----
-
-### 🔶 Formation Classic — 诛仙阵组合版（兼容保留）
-**`agent-work-environment`** · v2.1 · [查看详情](./agent-work-environment/README.md)
-
-路由 + 治理一体化版本。不想分开管理时的开箱即用选项，不再主动迭代。
+这五阵更像一份**工作模式清单**。
 
 ---
 
-## 🖥️ 适配平台
+## 三体法则的核心边界
 
-three-body 适用于以下 AI Agent 开发环境：
+`environment-governance` 的重点不在规则越多越好，而在于先读懂局势，再给出边界。
 
-| 平台 | 标识 | 安装方式 | 状态 |
-|:---:|:---:|:---|:---:|
-| **Claude Code** | `claude` | Skill 目录安装 | ✅ 已验证 |
-| **Opencode** | `opencode` | Skill 目录安装 | ✅ 已验证 |
-| **OpenClaw** | `openclaw` | Skill 目录安装 | ✅ 已验证 |
-| **Codex CLI** | `codex` | 配置 / MCP 方式 | ✅ 已验证 |
+### 五条法则
 
-### 各平台详细安装
+- 上下文预算
+- 工具边界
+- 风险升级
+- 写回策略
+- 诊断访问
 
-#### Claude Code
+### 四类核心信号
+
+- `risk_level`
+- `task_complexity`
+- `has_failed`
+- `write_intent`
+
+它的价值在于：
+
+> 它更像是在判断“眼下是什么局面”，然后再决定边界该收紧到什么程度。
+
+---
+
+## 什么时候该装哪些 skill
+
+### 我只想先装最核心的
+
+如果你只想获得“先选模式 + 再控边界”的核心能力：
 
 ```bash
-# 推荐：安装拆分版（v3.0）
-cp -r three-body/environment-governance ~/.claude/skills/
-cp -r three-body/agent-work-environment-v3 ~/.claude/skills/
-
-# 可选：档案读取器
-cp -r three-body/diagnostic-archive ~/.claude/skills/
-
-# 验证安装
-claude skills list
+./install.sh claude
 ```
 
-#### Opencode
+这会安装：
+
+- `agent-work-environment-v3`
+- `environment-governance`
+
+适合：大多数第一次接触 three-body 的用户。
+
+### 我需要失败诊断能力
 
 ```bash
-# 推荐：安装拆分版（v3.0）
-cp -r three-body/environment-governance ~/.opencode/skills/
-cp -r three-body/agent-work-environment-v3 ~/.opencode/skills/
-
-# 验证安装
-opencode skills list
+./install.sh claude --with-archive
 ```
 
-#### OpenClaw
+额外安装：
 
-OpenClaw 支持通过 Skill 目录加载自定义技能：
+- `diagnostic-archive`
+
+适合：你已经在用 run archives，或者你经常需要复盘失败原因。
+
+### 我需要完整战略层
 
 ```bash
-# 创建 OpenClaw 的 skills 目录（如不存在）
-mkdir -p ~/.openclaw/skills
-
-# 安装 three-body skills
-cp -r three-body/environment-governance ~/.openclaw/skills/
-cp -r three-body/agent-work-environment-v3 ~/.openclaw/skills/
-cp -r three-body/diagnostic-archive ~/.openclaw/skills/
-
-# 在 OpenClaw 配置中启用（通常在 ~/.openclaw/config.yaml）
-# skills:
-#   - environment-governance
-#   - agent-work-environment-v3
-#   - diagnostic-archive
+./install.sh claude --with-strategy
 ```
 
-#### Codex CLI
+额外安装：
 
-Codex CLI 通过 **系统提示（System Prompt）** 或 **MCP (Model Context Protocol)** 方式引入：
+- `wallfacer`
+- `wallbreaker`
+- `swordbearer`
 
-**方式一：系统提示（推荐）**
+适合：复杂任务多、需要方案收敛、需要高危动作授权的人。
 
-创建或编辑 Codex 配置文件：
+### 我想直接上全量推荐配置
 
 ```bash
-# macOS/Linux
-mkdir -p ~/.codex
-cat > ~/.codex/config.toml << 'EOF'
-[system]
-prompt = """
-You are an AI Agent with three-body governance.
-
-Always follow these principles from the Three-Body Laws:
-1. Context Budget - Conserve context window, load on demand
-2. Tool Boundary - Prefer low-risk tools, confirm high-risk ones
-3. Risk Escalation - Pause before destructive operations
-4. Writeback Policy - Confirm based on change type
-5. Diagnostic Access - Read raw evidence when debugging
-
-For task routing, use the Zhu Xian Formation approach:
-- Research tasks → Guan Ji Formation (observation mode)
-- Implementation → Po Ju Formation (breakthrough mode)
-- Verification → Ming Jian Formation (inspection mode)
-- Writing → Li Yan Formation (documentation mode)
-- Operations → Xing Ling Formation (command mode with extra caution)
-"""
-EOF
+./install.sh claude --with-strategy --with-archive
 ```
 
-**方式二：MCP 方式（如果支持）**
+适合：你想把完整的 four-layer 体系一次装齐。
 
-在 Codex 的 MCP 配置中添加：
-
-```json
-{
-  "mcpServers": {
-    "three-body-governance": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
-      "env": {
-        "SKILLS_PATH": "~/three-body"
-      }
-    }
-  }
-}
-```
-
-**方式三：直接使用 SKILL.md 内容**
-
-将 `environment-governance/SKILL.md` 和 `agent-work-environment-v3/SKILL.md` 的内容复制到 Codex 的系统提示中。
-
-### 使用方式
-
-安装后，在对话中直接使用触发词即可：
-
-| 触发场景 | 说明 |
-|---|---|
-| `"帮我分析下这个模块"` | 自动进入诛仙阵 → 观机阵（研究模式） |
-| `"实现这个功能，但要小心"` | 自动进入诛仙阵 → 破局阵（实现模式）+ 三体法则约束 |
-| `"上次那个 run 为什么失败了"` | 调用档案读取器进行失败诊断 |
-| `"部署到生产环境"` | 自动进入行令阵（运维模式）+ `environment-governance` 高风险确认流程 |
-
----
-
-## 🚀 快速安装（Claude Code 示例）
+如果你使用手动复制，也可以按需安装：
 
 ```bash
-# 推荐：拆分版（v3.0），路由与治理分离
 cp -r environment-governance ~/.claude/skills/
 cp -r agent-work-environment-v3 ~/.claude/skills/
-
-# 可选：战略层（Phase 2）
-cp -r swordbearer ~/.claude/skills/
+cp -r diagnostic-archive ~/.claude/skills/
 cp -r wallfacer ~/.claude/skills/
 cp -r wallbreaker ~/.claude/skills/
-
-# 可选：失败诊断
-cp -r diagnostic-archive ~/.claude/skills/
-
-# 或者：组合版（v2.1），开箱即用
-cp -r agent-work-environment ~/.claude/skills/
+cp -r swordbearer ~/.claude/skills/
 ```
 
-如果你使用仓库自带安装脚本，可以这样安装：
+兼容组合版：
 
 ```bash
-# 基础 split 安装
-./install.sh claude
-
-# 基础 split + 档案读取器
-./install.sh claude --with-archive
-
-# 基础 split + 战略层（三个角色）
-./install.sh claude --with-strategy
-
-# 基础 split + 战略层 + 档案读取器
-./install.sh claude --with-strategy --with-archive
-
-# 组合版（兼容保留）
 ./install.sh claude --classic
 ```
 
-### 战略层什么时候值得安装
+---
 
-建议安装 `swordbearer / wallfacer / wallbreaker` 的情况：
+## 支持平台
 
-- 你希望高危动作在执行前有最终授权层
-- 你经常面对复杂多阶段任务，需要先收敛方案再实施
-- 你希望在执行前，有一个专门的“挑战方案”角色来暴露盲点
+| 平台 | 标识 | 状态 |
+|---|---|---|
+| Claude Code | `claude` | ✅ 已验证 |
+| Opencode | `opencode` | ✅ 已验证 |
+| OpenClaw | `openclaw` | ✅ 已验证 |
 
-如果你只是想先用最轻量的 three-body 体验，保持 split 基础安装即可。
+更多安装细节见：[`install.sh`](./install.sh)
 
 ---
 
-## 🧪 仓库自检
+## 装了和没装的差别
 
-在发布或打包前，建议先跑一遍本地校验：
+如果你担心它只是“换了一种说法的 system prompt”，可以直接看这个对照示例：
+
+- [examples/behavior-diff.md](./examples/behavior-diff.md)
+
+它对比了三种情况：
+
+1. 没装 three-body
+2. 只装 `environment-governance`
+3. 同时装路由层与治理层
+
+你会看到差别不只在措辞，真正拉开差距的是**决策链条本身**。
+
+---
+
+## 适配场景
+
+### 这类人会很适合
+
+- 你正在长期使用 coding agent，不是偶尔来一次一问一答
+- 你关心高危操作时的边界，而不只关心“快点做完”
+- 你的任务经常跨研究、实现、验证、文档、运维多个阶段
+- 你希望复杂任务先出方案，再执行
+- 你希望失败后能回看证据，不想靠直觉一遍遍重试
+
+### 下面这些场景就没必要上 full 套了
+
+- 单次简单问答
+- 一次性生成几行代码
+- 完全不在乎风险确认与行为一致性
+
+这种情况下，three-body 多半会显得偏重。
+
+---
+
+## 当前技术路线
+
+### Phase 1：基础层
+
+完成：
+
+- `environment-governance`
+- `agent-work-environment-v3`
+- `diagnostic-archive`
+
+核心价值：
+
+> 会选模式、会立边界、会读证据。
+
+### Phase 2：战略层
+
+完成：
+
+- `wallfacer`
+- `wallbreaker`
+- `swordbearer`
+
+核心价值：
+
+> 会规划、会挑战、会裁决。
+
+### Phase 3：情报与长期记忆
+
+规划中：
+
+- `sophon`
+
+当前尚未实现，不应和 Phase 2 混淆。
+
+---
+
+## 仓库结构
+
+```text
+three-body/
+├── README.md
+├── README_EN.md
+├── ARCHITECTURE.md
+├── UNIVERSE.md
+│
+├── environment-governance/      # 三体法则
+├── agent-work-environment-v3/   # 诛仙阵（主推）
+├── diagnostic-archive/          # 档案读取器
+├── wallfacer/                   # 面壁人
+├── wallbreaker/                 # 破壁人
+├── swordbearer/                 # 执剑人
+├── agent-work-environment/      # 兼容组合版
+│
+├── scripts/
+│   ├── validate-repo.ps1
+│   └── build-skill-packages.ps1
+│
+└── examples/
+```
+
+---
+
+## 仓库自检与打包
+
+### 校验仓库一致性
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\validate-repo.ps1
 ```
 
-它会检查：
-
-- 根目录 `LICENSE` 是否存在
-- 每个 skill 包是否同时包含 `SKILL.md` 和 `README.md`
-- 每个 skill 包是否存在对应的 `.skill` 打包产物
-- 战略层 skill（`swordbearer` / `wallfacer` / `wallbreaker`）是否同时包含 `CHANGELOG.md` 和 `EXAMPLES.md`
-- 战略层 skill 是否已同步接入 `README.md` / `README_EN.md` / `UNIVERSE.md`
-- 仓库内 Markdown 的本地相对链接是否可解析
-
----
-
-## 📦 生成 `.skill` 产物
-
-根目录的 `.skill` 文件是由源码目录生成的发布产物。
-
-重新生成全部产物：
+### 重新生成 `.skill` 产物
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1
 ```
 
-只生成指定 skill：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\build-skill-packages.ps1 -SkillNames agent-work-environment-v3
-```
-
 建议流程：
 
 1. 先改源码目录
-2. 运行打包脚本更新 `.skill`
-3. 再运行校验脚本确认发布面没有漂移
+2. 再生成 `.skill`
+3. 最后跑校验脚本
 
 ---
 
-## 🌍 宇宙规划（Phase 2+）
+## 设计原则
 
-three-body 是一个持续扩张的宇宙。已规划的角色：
-
-| 角色 | 候选 ID | 定义 | 阶段 |
-|:---:|---|---|:---:|
-| ⚔️ **执剑人** | `swordbearer` | 高危操作最终授权者，威慑 > 拦截 | **Phase 2A（进行中）** |
-| 🧱 **面壁人** | `wallfacer` | 独立深度规划，不暴露中间意图 | **Phase 2B（进行中）** |
-| 🔓 **破壁人** | `wallbreaker` | 质疑现有方案，寻找未验证假设 | **Phase 2C（进行中）** |
-| 👁️ **智子** | `sophon` | 跨 session 记忆，全局模式识别 | Phase 3 |
-
-→ [完整宇宙地图](./UNIVERSE.md)
+1. **先分层，再组合**：不要一上来做一个“大总控 skill”
+2. **先识别，再授权**：治理层识别风险，执剑人决定放不放行
+3. **先规划，再执行**：复杂任务不要直接跳进实现
+4. **先挑战，再承诺**：高返工成本的方案必须先拆一轮
+5. **先证据，再结论**：失败时优先回 archive，先弄清发生了什么
 
 ---
 
-## 💡 设计哲学
+## 如果你第一次接触这个项目，建议这样看
 
-**1. 分层而非一体化**
-路由层（诛仙阵）与治理层（三体法则）解耦。每层独立演进，独立复用。
+1. 先看本 README，理解 7 个 skills 的关系
+2. 再看 [ARCHITECTURE.md](./ARCHITECTURE.md)，理解完整调用顺序
+3. 如果你要安装，直接看 [`install.sh`](./install.sh)
+4. 如果你要理解未来路线，再看 [UNIVERSE.md](./UNIVERSE.md)
 
-**2. 信号驱动，而非规则堆砌**
-4 个信号实时计算偏置，无需为每个场景手写规则。
+如果你只准备花 5 分钟了解它，可以按这个顺序看：
 
-**3. 硬确认不可绕过**
-删除、强推、凭证变更——无论用户怎么催，法则层有最终否决权。
-
-**4. 名字即设定**
-执剑人的威慑哲学、面壁人的深度规划、智子的全知视角——角色名字本身就是行为逻辑的说明书。
-
----
-
-## 📁 项目结构
-
-```
-three-body/
-├── README.md                        # 本文件（中文版）
-├── README_EN.md                     # 英文版
-├── ARCHITECTURE.md                  # 系统关系说明书
-├── UNIVERSE.md                      # 宇宙全图与规划
-│
-├── environment-governance/          # ⚖️ 三体法则（治理层）
-│   ├── SKILL.md
-│   └── references/
-│       ├── laws.md
-│       ├── default-bias.md
-│       └── escalation-matrix.md
-│
-├── agent-work-environment-v3/       # ⚔️ 诛仙阵（路由层，主推）
-│   ├── SKILL.md
-│   └── references/
-│       ├── formations.md
-│       └── formation-law-mapping.md
-│
-├── diagnostic-archive/              # 🔍 黑暗森林档案
-│   ├── SKILL.md
-│   └── references/
-│
-├── swordbearer/                     # ⚔️ 执剑人（Phase 2A）
-│   ├── SKILL.md
-│   └── references/
-│
-├── wallfacer/                       # 🧱 面壁人（Phase 2B）
-│   ├── SKILL.md
-│   └── references/
-│
-├── wallbreaker/                     # 🔓 破壁人（Phase 2C）
-│   ├── SKILL.md
-│   └── references/
-│
-├── agent-work-environment/          # 🔶 组合版（兼容保留）
-│   ├── SKILL.md
-│   └── references/
-│
-└── _backup/
-    └── agent-work-environment-v2.1/
-```
+1. 看“30 秒快速理解”
+2. 看“当前架构（Phase 2）”
+3. 看“它们之间怎么协作”
+4. 最后决定装最小版还是全量版
 
 ---
 
-## 📜 许可证
+## 许可证
 
-MIT License — 自由使用，欢迎贡献。
+[MIT](./LICENSE)
 
 ---
 
 <div align="center">
 
-**三体定其界（怎么做），诛仙阵定其式（做什么）。**
+**三体定其界，诛仙阵定其式。**
 
-[架构总览](./ARCHITECTURE.md) · [宇宙地图](./UNIVERSE.md) · [三体法则](./environment-governance/README.md) · [诛仙阵](./agent-work-environment-v3/README.md)
+它追求的，不是把 Agent 包装得更像“万能助手”。
+它更像一套长期运行的系统：遇到复杂任务会先想清楚，遇到高危动作会先踩刹车，失败以后知道回哪找证据。
 
-🌐 [English Version](./README_EN.md)
+很多 agent 方案都在强调“更快开始做”。
+three-body 更看重另一件事：**别在一开始就把事做偏。**
+
+[架构总览](./ARCHITECTURE.md) · [宇宙地图](./UNIVERSE.md) · [English](./README_EN.md)
 
 </div>
-
-
-
